@@ -2,16 +2,14 @@
 import Layout from '../../layouts/Layout.astro';
 import CarCard from '../../components/CarCard.astro';
 import { getCars, liveCars, activeBrands, bodyCounts } from '../../lib/cars';
-import { Search, SlidersHorizontal, X } from '@lucide/astro';
+import { Search, X, SlidersHorizontal } from '@lucide/astro';
 
 const all = await getCars();
 const live = liveCars(all);
 const brands = activeBrands(live);
 const bodies = [...bodyCounts(live).entries()].filter(([b]) => b !== 'Other').sort((a, b) => b[1] - a[1]).map(([b]) => b);
 const prices = live.map((c) => c.priceAed ?? 0).filter(Boolean);
-const minP = Math.min(...prices), maxP = Math.max(...prices);
-const years = [...new Set(live.map((c) => c.year).filter(Boolean))].sort((a, b) => (b ?? 0) - (a ?? 0));
-
+const maxP = Math.max(...prices);
 const priceBrackets = [50000, 100000, 150000, 200000, 300000, 500000, 750000, 1000000];
 ---
 <Layout title="Our Cars — GTA Cars Dubai pre-owned showroom" description="Browse quality pre-owned cars at GTA Cars Dubai — SUVs, coupes, sedans and supercars. Real AED prices, full specs, finance and part-exchange available.">
@@ -27,52 +25,59 @@ const priceBrackets = [50000, 100000, 150000, 200000, 300000, 500000, 750000, 10
     </div>
   </section>
 
-  <!-- Filter + results -->
-  <section class="bg-ink py-10 sm:py-14">
+  <!-- Sticky filter bar -->
+  <div data-filterbar class="sticky top-[calc(var(--nav-h)-1.25rem)] z-30 border-b border-ivory/10 bg-ink/85 py-4 backdrop-blur-xl">
     <div class="lux-wide">
-      <!-- Filter bar -->
-      <div class="card p-4 sm:p-5" data-filterbar>
-        <div class="flex flex-col gap-3 lg:flex-row lg:items-center">
-          <label class="relative flex-1">
-            <Search class="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-faint" />
-            <input data-f="search" type="search" placeholder="Search make or model…" aria-label="Search cars"
-              class="w-full rounded-full border border-ivory/15 bg-graphite py-3 pl-11 pr-4 text-sm text-ivory placeholder:text-faint focus:border-gold/50 focus:outline-none" />
-          </label>
-          <div class="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:flex">
-            <select data-f="brand" aria-label="Brand" class="rounded-full border border-ivory/15 bg-graphite px-4 py-3 text-sm text-ivory focus:border-gold/50 focus:outline-none">
-              <option value="">All makes</option>
-              {brands.map((b) => <option value={b}>{b}</option>)}
-            </select>
-            <select data-f="body" aria-label="Body type" class="rounded-full border border-ivory/15 bg-graphite px-4 py-3 text-sm text-ivory focus:border-gold/50 focus:outline-none">
-              <option value="">All bodies</option>
-              {bodies.map((b) => <option value={b}>{b}</option>)}
-            </select>
-            <select data-f="maxprice" aria-label="Max price" class="rounded-full border border-ivory/15 bg-graphite px-4 py-3 text-sm text-ivory focus:border-gold/50 focus:outline-none">
-              <option value="">Any price</option>
-              {priceBrackets.filter((p) => p <= maxP + 1).map((p) => <option value={p}>Up to AED {p.toLocaleString('en-US')}</option>)}
-            </select>
-            <select data-f="sort" aria-label="Sort" class="rounded-full border border-ivory/15 bg-graphite px-4 py-3 text-sm text-ivory focus:border-gold/50 focus:outline-none">
-              <option value="price-desc">Price: high → low</option>
-              <option value="price-asc">Price: low → high</option>
-              <option value="year-desc">Year: newest</option>
-              <option value="km-asc">Mileage: lowest</option>
-            </select>
-          </div>
-        </div>
-        <div class="mt-3 flex items-center justify-between">
-          <p class="text-sm text-mist"><span data-count class="font-semibold text-ivory">{live.length}</span> of {live.length} cars</p>
-          <button data-reset class="inline-flex items-center gap-1.5 text-[0.72rem] font-medium uppercase tracking-[0.14em] text-faint transition-colors hover:text-gold"><X class="h-3.5 w-3.5" />Reset</button>
+      <div class="flex flex-col gap-3 lg:flex-row lg:items-center">
+        <label class="relative flex-1">
+          <Search class="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-faint" />
+          <input data-f="search" type="search" placeholder="Search make or model…" aria-label="Search cars"
+            class="w-full rounded-full border border-ivory/15 bg-graphite py-3 pl-11 pr-4 text-sm text-ivory placeholder:text-faint focus:border-gold/50 focus:outline-none" />
+        </label>
+        <div class="grid grid-cols-2 gap-2.5 sm:grid-cols-4 lg:flex lg:gap-2.5">
+          <select data-f="brand" aria-label="Brand" class="select-dark rounded-full border border-ivory/15 bg-graphite px-4 py-3 text-sm text-ivory focus:border-gold/50 focus:outline-none">
+            <option value="">All makes</option>
+            {brands.map((b) => <option value={b}>{b}</option>)}
+          </select>
+          <select data-f="body" aria-label="Body type" class="select-dark rounded-full border border-ivory/15 bg-graphite px-4 py-3 text-sm text-ivory focus:border-gold/50 focus:outline-none">
+            <option value="">All bodies</option>
+            {bodies.map((b) => <option value={b}>{b}</option>)}
+          </select>
+          <select data-f="maxprice" aria-label="Max price" class="select-dark rounded-full border border-ivory/15 bg-graphite px-4 py-3 text-sm text-ivory focus:border-gold/50 focus:outline-none">
+            <option value="">Any price</option>
+            {priceBrackets.filter((p) => p <= maxP + 1).map((p) => <option value={p}>Up to AED {p.toLocaleString('en-US')}</option>)}
+          </select>
+          <select data-f="sort" aria-label="Sort" class="select-dark rounded-full border border-ivory/15 bg-graphite px-4 py-3 text-sm text-ivory focus:border-gold/50 focus:outline-none">
+            <option value="price-desc">Price: high → low</option>
+            <option value="price-asc">Price: low → high</option>
+            <option value="year-desc">Year: newest</option>
+            <option value="km-asc">Mileage: lowest</option>
+          </select>
         </div>
       </div>
 
+      <!-- Active filter chips + count -->
+      <div class="mt-3 flex flex-wrap items-center gap-2">
+        <p class="mr-1 text-sm text-mist"><span data-count class="font-semibold text-ivory">{live.length}</span> <span data-count-noun>cars</span></p>
+        <div data-chips class="flex flex-wrap gap-2"></div>
+        <button data-reset class="ml-auto hidden items-center gap-1.5 rounded-full border border-ivory/15 px-3 py-1.5 text-[0.7rem] font-medium uppercase tracking-[0.12em] text-faint transition-colors hover:border-gold/40 hover:text-gold"><X class="h-3.5 w-3.5" />Clear all</button>
+      </div>
+    </div>
+  </div>
+
+  <section class="bg-ink py-10 sm:py-12">
+    <div class="lux-wide">
+      <h2 class="sr-only">Available cars</h2>
       <!-- ★ Mobile: ONE car per row -->
-      <div data-grid class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {live.map((car, i) => <CarCard car={car} eager={i < 3} />)}
+      <div data-grid class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {live.map((car, i) => <CarCard car={car} eager={i < 6} />)}
       </div>
 
       <div data-empty class="hidden py-20 text-center">
-        <p class="font-display text-2xl text-ivory">No cars match those filters.</p>
+        <span class="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full border border-ivory/12 text-gold"><SlidersHorizontal class="h-6 w-6" /></span>
+        <p class="mt-6 font-display text-2xl text-ivory">No cars match those filters.</p>
         <p class="mt-3 text-sm text-mist">Try widening your search, or <a href="/contact" class="text-gold underline decoration-gold/40 underline-offset-2">tell us what you’re after</a> — we source to order.</p>
+        <button data-reset class="btn-dark mt-7 px-7 py-3">Clear filters</button>
       </div>
     </div>
   </section>
@@ -84,9 +89,34 @@ const priceBrackets = [50000, 100000, 150000, 200000, 300000, 500000, 750000, 10
   const cards = Array.from(document.querySelectorAll('[data-car]')) as HTMLElement[];
   const countEl = document.querySelector('[data-count]') as HTMLElement;
   const emptyEl = document.querySelector('[data-empty]') as HTMLElement;
+  const chipsEl = document.querySelector('[data-chips]') as HTMLElement;
+  const resetBtns = document.querySelectorAll('[data-reset]');
   const get = (k: string) => bar?.querySelector(`[data-f="${k}"]`) as HTMLInputElement | HTMLSelectElement | null;
-
   const num = (el: HTMLElement, k: string) => Number(el.dataset[k] || 0);
+
+  const labels: Record<string, (v: string) => string> = {
+    search: (v) => `“${v}”`,
+    brand: (v) => v,
+    body: (v) => v,
+    maxprice: (v) => `≤ AED ${Number(v).toLocaleString('en-US')}`,
+  };
+
+  function renderChips() {
+    chipsEl.innerHTML = '';
+    let any = false;
+    (['search', 'brand', 'body', 'maxprice'] as const).forEach((k) => {
+      const el = get(k); const v = el?.value?.trim();
+      if (!v) return;
+      any = true;
+      const chip = document.createElement('button');
+      chip.className = 'inline-flex items-center gap-1.5 rounded-full border border-gold/35 bg-gold/10 px-3 py-1.5 text-[0.72rem] font-medium text-ivory transition-colors hover:border-gold';
+      chip.innerHTML = `${labels[k](v)} <span class="text-gold">✕</span>`;
+      chip.addEventListener('click', () => { (el as HTMLInputElement).value = ''; apply(); });
+      chipsEl.appendChild(chip);
+    });
+    // Only the filter-bar's own "Clear all" button toggles with active state
+    (bar?.querySelector('[data-reset]') as HTMLElement)?.classList.toggle('hidden', !any);
+  }
 
   function apply() {
     const q = (get('search')?.value || '').trim().toLowerCase();
@@ -106,7 +136,6 @@ const priceBrackets = [50000, 100000, 150000, 200000, 300000, 500000, 750000, 10
       if (ok) shown++;
     });
 
-    // sort visible
     const visible = cards.filter((c) => !c.classList.contains('hidden'));
     visible.sort((a, b) => {
       switch (sort) {
@@ -119,18 +148,22 @@ const priceBrackets = [50000, 100000, 150000, 200000, 300000, 500000, 750000, 10
     visible.forEach((c) => grid.appendChild(c));
 
     countEl.textContent = String(shown);
+    const noun = document.querySelector('[data-count-noun]');
+    if (noun) noun.textContent = shown === 1 ? 'car' : 'cars';
     emptyEl.classList.toggle('hidden', shown > 0);
     grid.classList.toggle('hidden', shown === 0);
+    renderChips();
   }
 
   bar?.querySelectorAll('[data-f]').forEach((el) => {
     el.addEventListener('input', apply);
     el.addEventListener('change', apply);
   });
-  document.querySelector('[data-reset]')?.addEventListener('click', () => {
+  resetBtns.forEach((btn) => btn.addEventListener('click', () => {
     bar?.querySelectorAll('[data-f]').forEach((el) => ((el as HTMLInputElement).value = el.tagName === 'SELECT' ? (el as HTMLSelectElement).options[0].value : ''));
     apply();
-  });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }));
 
   // Preselect from URL (?brand= / ?body= / ?q=)
   const params = new URLSearchParams(location.search);

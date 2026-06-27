@@ -20,7 +20,7 @@
   --rgb-steel: 35 35 39;        /* #232327 raised / fill / border */
   --rgb-ivory: 244 242 236;     /* #F4F2EC PRIMARY text on dark */
   --rgb-mist: 180 175 164;      /* #B4AFA4 secondary text */
-  --rgb-faint: 124 120 111;     /* #7C786F faint label / tertiary */
+  --rgb-faint: 140 135 124;     /* #8C877C faint label / tertiary (AA-safe on dark) */
   --rgb-line: 244 242 236;      /* hairline base (used at low alpha) */
   --rgb-gold: 194 174 74;       /* #C2AE4A brass accent (logo-bright) */
   --rgb-gold-lite: 220 203 114; /* #DCCB72 highlight / shimmer */
@@ -116,4 +116,41 @@
 
   /* Text-on-image safety (cinematic hero overlays) */
   .text-shadow-cine { text-shadow: 0 2px 28px rgb(0 0 0 / 0.6), 0 1px 4px rgb(0 0 0 / 0.5); }
+
+  /* Custom-styled native selects (dark, with brass chevron) */
+  .select-dark {
+    appearance: none; -webkit-appearance: none; -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23C2AE4A' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem;
+  }
+  .select-dark option { background: rgb(var(--rgb-graphite)); color: rgb(var(--rgb-ivory)); }
+
+  /* Section vertical rhythm */
+  .section { @apply py-20 sm:py-28; }
+  .section-sm { @apply py-16 sm:py-20; }
+
+  /* Brass gradient text — used very sparingly on a single accent word */
+  .text-brass {
+    background: linear-gradient(100deg, rgb(var(--rgb-gold-lite)), rgb(var(--rgb-gold)) 45%, rgb(var(--rgb-gold-deep)));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+
+  /* Cinematic film-grain (very faint, premium texture) */
+  .grain::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 1; opacity: 0.05; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Scroll cue */
+  .scroll-cue span { animation: scrollcue 1.9s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) { .scroll-cue span { animation: none; } }
+
+  /* Lightbox */
+  .lightbox { @apply fixed inset-0 z-[120] hidden place-items-center bg-ink/95 backdrop-blur-sm p-4 sm:p-8; }
+  .lightbox.is-open { display: grid; }
+  .lightbox img { max-height: 88vh; max-width: 100%; width: auto; border-radius: 0.75rem; }
+
+  /* Hide scrollbar on horizontal media strips */
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
 }

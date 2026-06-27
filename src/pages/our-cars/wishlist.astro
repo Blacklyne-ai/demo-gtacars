@@ -17,6 +17,7 @@ const all = await getCars();
 
   <section class="bg-ink py-12 sm:py-16">
     <div class="lux-wide">
+      <h2 class="sr-only">Your saved cars</h2>
       <!-- ★ Mobile: one car per row -->
       <div data-wish-grid class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {all.map((car) => (

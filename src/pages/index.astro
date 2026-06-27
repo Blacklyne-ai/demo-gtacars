@@ -1,12 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
+import BrandStrip from '../components/BrandStrip.astro';
 import CarCard from '../components/CarCard.astro';
 import LeadForm from '../components/LeadForm.astro';
 import SpecialistCards from '../components/SpecialistCards.astro';
 import { getCars, liveCars } from '../lib/cars';
 import { sell, services, contact, letsTalk, site } from '../data/site';
-import { ArrowRight, Check, MessageCircle, Phone, Car, Tag, Handshake, ArrowLeftRight, Landmark, ClipboardCheck } from '@lucide/astro';
+import { ArrowRight, Check, MessageCircle, Phone, Mail, Clock, Car, Tag, Handshake, ArrowLeftRight, Landmark, ClipboardCheck } from '@lucide/astro';
 const icons = { Car, Tag, Handshake, ArrowLeftRight, Landmark, ClipboardCheck };
 
 const all = await getCars();
@@ -20,6 +21,8 @@ const heroImg = '/images/cars/2024-ferrari-roma2028-ferrari-warranty-and-service
 ---
 <Layout>
   <Hero image={heroImg} alt="Ferrari Roma at the GTA Cars showroom in Dubai" />
+
+  <BrandStrip />
 
   <!-- ───────────── SELL YOUR CAR (focus) ───────────── -->
   <section id="sell" class="relative border-b border-ivory/10 bg-coal py-20 sm:py-28">
@@ -151,14 +154,36 @@ const heroImg = '/images/cars/2024-ferrari-roma2028-ferrari-warranty-and-service
     </div>
   </section>
 
-  <!-- ───────────── LET'S TALK ───────────── -->
+  <!-- ───────────── LET'S TALK (contact band) ───────────── -->
   <section class="relative overflow-hidden bg-ink py-24 sm:py-32">
-    <div class="lux-narrow text-center">
-      <p class="eyebrow mb-5" data-reveal>{letsTalk.title}</p>
-      <h2 class="display-2 text-ivory" data-reveal>{letsTalk.body}</h2>
-      <div class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row" data-reveal>
-        <a href="/contact" class="btn-gold px-8 py-4">Contact us <ArrowRight class="h-4 w-4" /></a>
-        <a href={contact.whatsapp} target="_blank" rel="noopener" class="btn-primary px-8 py-4"><MessageCircle class="h-4 w-4" /> WhatsApp</a>
+    <div class="lux-wide">
+      <div class="grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:gap-20">
+        <div>
+          <p class="eyebrow mb-5" data-reveal>{letsTalk.title}</p>
+          <h2 class="display-2 text-ivory" data-reveal>{letsTalk.body}</h2>
+          <div class="mt-9 flex flex-col gap-3 sm:flex-row" data-reveal>
+            <a href="/sell-your-car" class="btn-gold px-8 py-4"><Tag class="h-4 w-4" /> Sell your car</a>
+            <a href="/our-cars" class="btn-primary px-8 py-4">Browse the showroom <ArrowRight class="h-4 w-4" /></a>
+          </div>
+        </div>
+        <div class="grid gap-3 sm:grid-cols-2">
+          <a href={contact.phonePrimaryHref} class="card group flex items-center gap-4 p-5 transition-colors hover:border-gold/40" data-reveal>
+            <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gold/12 text-gold"><Phone class="h-5 w-5" /></span>
+            <span><span class="block text-[0.68rem] uppercase tracking-[0.14em] text-faint">Call</span><span class="block text-sm font-semibold text-ivory transition-colors group-hover:text-gold">{contact.phonePrimary}</span></span>
+          </a>
+          <a href={contact.whatsapp} target="_blank" rel="noopener" class="card group flex items-center gap-4 p-5 transition-colors hover:border-gold/40" data-reveal data-delay="60">
+            <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gold/12 text-gold"><MessageCircle class="h-5 w-5" /></span>
+            <span><span class="block text-[0.68rem] uppercase tracking-[0.14em] text-faint">WhatsApp</span><span class="block text-sm font-semibold text-ivory transition-colors group-hover:text-gold">{contact.whatsappNumber}</span></span>
+          </a>
+          <a href={contact.emailHref} class="card group flex items-center gap-4 p-5 transition-colors hover:border-gold/40" data-reveal data-delay="120">
+            <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gold/12 text-gold"><Mail class="h-5 w-5" /></span>
+            <span><span class="block text-[0.68rem] uppercase tracking-[0.14em] text-faint">Email</span><span class="block text-sm font-semibold text-ivory transition-colors group-hover:text-gold">{contact.email}</span></span>
+          </a>
+          <div class="card flex items-center gap-4 p-5" data-reveal data-delay="180">
+            <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gold/12 text-gold"><Clock class="h-5 w-5" /></span>
+            <span><span class="block text-[0.68rem] uppercase tracking-[0.14em] text-faint">Open</span><span class="block text-sm font-semibold text-ivory">{contact.hours}</span></span>
+          </div>
+        </div>
       </div>
     </div>
   </section>

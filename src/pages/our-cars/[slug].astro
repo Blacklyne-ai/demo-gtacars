@@ -3,7 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import CarCard from '../../components/CarCard.astro';
 import { getCars, similar, fmtAED, fmtKm, type Car } from '../../lib/cars';
 import { contact } from '../../data/site';
-import { Heart, MessageCircle, Phone, ArrowLeft, Landmark, ArrowLeftRight, Gauge, Cog, Cylinder, Zap, Fuel, Palette, DoorOpen, MapPin, ShieldCheck, FileCheck, Wrench } from '@lucide/astro';
+import { Heart, MessageCircle, Phone, ArrowLeft, Landmark, ArrowLeftRight, Gauge, Cog, Cylinder, Zap, Fuel, Palette, DoorOpen, MapPin, ShieldCheck, FileCheck, Wrench, Calendar, ChevronLeft, ChevronRight, Expand, X } from '@lucide/astro';
 
 export async function getStaticPaths() {
   const all = await getCars();
@@ -30,7 +30,7 @@ const specRows = [
   car.specs.serviceHistory && { icon: 'FileCheck', label: 'Service history', value: car.specs.serviceHistory },
   car.specs.serviceContract && { icon: 'Wrench', label: 'Service pack', value: car.specs.serviceContract },
 ].filter(Boolean) as { icon: string; label: string; value: string }[];
-const icons: any = { Gauge, Cog, Cylinder, Zap, Fuel, Palette, DoorOpen, MapPin, ShieldCheck, FileCheck, Wrench, Calendar: ShieldCheck };
+const icons: any = { Gauge, Cog, Cylinder, Zap, Fuel, Palette, DoorOpen, MapPin, ShieldCheck, FileCheck, Wrench, Calendar };
 ---
 <Layout title={`${car.title} — GTA Cars Dubai`} description={car.description}>
   <article class="pt-[calc(var(--nav-h)+2rem)]">
@@ -40,15 +40,24 @@ const icons: any = { Gauge, Cog, Cylinder, Zap, Fuel, Palette, DoorOpen, MapPin,
 
     <div class="lux-wide mt-6 grid gap-10 lg:grid-cols-[1.5fr_1fr] lg:gap-14">
       <!-- Gallery -->
-      <div data-gallery>
-        <div class="relative overflow-hidden rounded-2xl border border-ivory/10 bg-coal">
-          <img data-main src={car.images[0]} alt={car.name} width="1400" height="1000" fetchpriority="high" decoding="async" class="aspect-[7/5] w-full object-cover" />
+      <div data-gallery data-count={car.images.length}>
+        <div class="group relative overflow-hidden rounded-2xl border border-ivory/10 bg-coal">
+          <button data-zoom class="block w-full cursor-zoom-in" aria-label="Enlarge photo">
+            <img data-main src={car.images[0]} alt={car.name} width="1400" height="1000" fetchpriority="high" decoding="async" class="aspect-[7/5] w-full object-cover" />
+          </button>
           {car.sold && <span class="absolute left-4 top-4 rounded-full bg-ink/80 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-gold ring-1 ring-gold/40 backdrop-blur">Sold</span>}
+          <span class="pointer-events-none absolute right-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-ink/60 px-3 py-1.5 text-[0.66rem] font-medium text-ivory/85 backdrop-blur"><Expand class="h-3.5 w-3.5" /><span data-counter>1</span>/{car.images.length}</span>
+          {car.images.length > 1 && (
+            <>
+              <button data-prev class="absolute left-3 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-ink/55 text-ivory backdrop-blur transition-all hover:bg-ink/80 hover:text-gold focus:opacity-100 sm:opacity-0 sm:group-hover:opacity-100" aria-label="Previous photo"><ChevronLeft class="h-5 w-5" /></button>
+              <button data-next class="absolute right-3 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-ink/55 text-ivory backdrop-blur transition-all hover:bg-ink/80 hover:text-gold focus:opacity-100 sm:opacity-0 sm:group-hover:opacity-100" aria-label="Next photo"><ChevronRight class="h-5 w-5" /></button>
+            </>
+          )}
         </div>
         {car.images.length > 1 && (
-          <div class="mt-3 grid grid-cols-4 gap-3 sm:grid-cols-6">
+          <div class="no-scrollbar mt-3 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-1">
             {car.images.map((img, i) => (
-              <button data-thumb data-src={img} class:list={['overflow-hidden rounded-lg border bg-coal transition-colors', i === 0 ? 'border-gold' : 'border-ivory/10 hover:border-ivory/40']} aria-label={`Photo ${i + 1}`}>
+              <button data-thumb data-i={i} data-src={img} class:list={['w-24 shrink-0 snap-start overflow-hidden rounded-lg border bg-coal transition-colors sm:w-28', i === 0 ? 'border-gold' : 'border-ivory/10 hover:border-ivory/40']} aria-label={`Photo ${i + 1}`}>
                 <img src={img} alt={`${car.name} photo ${i + 1}`} width="240" height="170" loading={i < 6 ? 'eager' : 'lazy'} decoding="async" class="aspect-[4/3] w-full object-cover" />
               </button>
             ))}
@@ -119,16 +128,55 @@ const icons: any = { Gauge, Cog, Cylinder, Zap, Fuel, Palette, DoorOpen, MapPin,
       </section>
     )}
   </article>
+
+  <!-- Lightbox -->
+  <div data-lightbox class="lightbox">
+    <button data-lb-close class="absolute right-4 top-4 inline-flex h-11 w-11 items-center justify-center rounded-full bg-graphite/80 text-ivory ring-1 ring-ivory/15 transition-colors hover:text-gold" aria-label="Close"><X class="h-5 w-5" /></button>
+    <button data-lb-prev class="absolute left-3 top-1/2 inline-flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-graphite/70 text-ivory ring-1 ring-ivory/15 transition-colors hover:text-gold sm:left-6" aria-label="Previous"><ChevronLeft class="h-6 w-6" /></button>
+    <img data-lb-img src={car.images[0]} alt={car.name} />
+    <button data-lb-next class="absolute right-3 top-1/2 inline-flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-graphite/70 text-ivory ring-1 ring-ivory/15 transition-colors hover:text-gold sm:right-6" aria-label="Next"><ChevronRight class="h-6 w-6" /></button>
+  </div>
 </Layout>
 
-<script>
-  const main = document.querySelector('[data-main]') as HTMLImageElement | null;
-  document.querySelectorAll('[data-thumb]').forEach((t) => {
-    t.addEventListener('click', () => {
-      const src = (t as HTMLElement).dataset.src!;
+<script is:inline define:vars={{ images: car.images }}>
+  (() => {
+    const main = document.querySelector('[data-main]');
+    const thumbs = Array.from(document.querySelectorAll('[data-thumb]'));
+    const counter = document.querySelector('[data-counter]');
+    const lb = document.querySelector('[data-lightbox]');
+    const lbImg = document.querySelector('[data-lb-img]');
+    let idx = 0;
+
+    function setActive(i) {
+      idx = (i + images.length) % images.length;
+      const src = images[idx];
       if (main) main.src = src;
-      document.querySelectorAll('[data-thumb]').forEach((x) => { x.classList.remove('border-gold'); x.classList.add('border-ivory/10'); });
-      t.classList.add('border-gold'); t.classList.remove('border-ivory/10');
+      if (counter) counter.textContent = String(idx + 1);
+      thumbs.forEach((t, j) => {
+        t.classList.toggle('border-gold', j === idx);
+        t.classList.toggle('border-ivory/10', j !== idx);
+      });
+      thumbs[idx]?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      if (lb?.classList.contains('is-open') && lbImg) lbImg.src = src;
+    }
+
+    thumbs.forEach((t, i) => t.addEventListener('click', () => setActive(i)));
+    document.querySelector('[data-prev]')?.addEventListener('click', () => setActive(idx - 1));
+    document.querySelector('[data-next]')?.addEventListener('click', () => setActive(idx + 1));
+
+    // Lightbox
+    const openLb = () => { if (lbImg) lbImg.src = images[idx]; lb?.classList.add('is-open'); document.body.style.overflow = 'hidden'; };
+    const closeLb = () => { lb?.classList.remove('is-open'); document.body.style.overflow = ''; };
+    document.querySelector('[data-zoom]')?.addEventListener('click', openLb);
+    document.querySelector('[data-lb-close]')?.addEventListener('click', closeLb);
+    document.querySelector('[data-lb-prev]')?.addEventListener('click', () => setActive(idx - 1));
+    document.querySelector('[data-lb-next]')?.addEventListener('click', () => setActive(idx + 1));
+    lb?.addEventListener('click', (e) => { if (e.target === lb) closeLb(); });
+    document.addEventListener('keydown', (e) => {
+      if (!lb?.classList.contains('is-open')) return;
+      if (e.key === 'Escape') closeLb();
+      if (e.key === 'ArrowLeft') setActive(idx - 1);
+      if (e.key === 'ArrowRight') setActive(idx + 1);
     });
-  });
+  })();
 </script>
