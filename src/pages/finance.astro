@@ -29,7 +29,7 @@ import { Check, MessageCircle, ArrowRight, Landmark } from '@lucide/astro';
         <h2 class="display-2 text-ivory" data-reveal>Bank-approved, handled in-house.</h2>
         <p class="mt-6 text-sm leading-relaxed text-faint" data-reveal>{finance.note}</p>
       </div>
-      <ul class="grid gap-4 sm:grid-cols-2">
+      <ul class="grid gap-4 sm:grid-cols-2 [&>li:last-child]:sm:col-span-2">
         {finance.benefits.map((b, i) => (
           <li class="card flex items-start gap-3 p-5 text-sm leading-relaxed text-ivory/90" data-reveal data-delay={i * 50}>
             <span class="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gold/15 text-gold"><Check class="h-3 w-3" /></span>{b}
