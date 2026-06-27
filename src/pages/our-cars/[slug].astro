@@ -1,0 +1,134 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import CarCard from '../../components/CarCard.astro';
+import { getCars, similar, fmtAED, fmtKm, type Car } from '../../lib/cars';
+import { contact } from '../../data/site';
+import { Heart, MessageCircle, Phone, ArrowLeft, Landmark, ArrowLeftRight, Gauge, Cog, Cylinder, Zap, Fuel, Palette, DoorOpen, MapPin, ShieldCheck, FileCheck, Wrench } from '@lucide/astro';
+
+export async function getStaticPaths() {
+  const all = await getCars();
+  return all.map((car) => ({ params: { slug: car.slug }, props: { car, all } }));
+}
+const { car, all } = Astro.props as { car: Car; all: Car[] };
+const sims = similar(all, car, 3);
+
+const enquiry = `Hi GTA Cars, I'm interested in the ${car.year ?? ''} ${car.name} (${fmtAED(car.priceAed)}). Is it still available?`;
+const waHref = `https://wa.me/971585121860?text=${encodeURIComponent(enquiry)}`;
+
+const specRows = [
+  car.year && { icon: 'Calendar', label: 'Year', value: String(car.year) },
+  car.specs.mileageKm != null && { icon: 'Gauge', label: 'Mileage', value: fmtKm(car.specs.mileageKm) },
+  car.specs.transmission && { icon: 'Cog', label: 'Transmission', value: car.specs.transmission },
+  car.bodyType && car.bodyType !== 'Other' && { icon: 'Fuel', label: 'Body type', value: car.bodyType },
+  car.specs.cylinders && { icon: 'Cylinder', label: 'Cylinders', value: car.specs.cylinders },
+  car.specs.horsepower && { icon: 'Zap', label: 'Power', value: car.specs.horsepower },
+  car.specs.fuelType && { icon: 'Fuel', label: 'Fuel', value: car.specs.fuelType },
+  car.specs.colour && { icon: 'Palette', label: 'Colour', value: car.specs.colour },
+  car.specs.doors && { icon: 'DoorOpen', label: 'Doors', value: car.specs.doors },
+  car.specs.regional && { icon: 'MapPin', label: 'Specs', value: car.specs.regional },
+  car.specs.warranty && { icon: 'ShieldCheck', label: 'Warranty', value: car.specs.warranty },
+  car.specs.serviceHistory && { icon: 'FileCheck', label: 'Service history', value: car.specs.serviceHistory },
+  car.specs.serviceContract && { icon: 'Wrench', label: 'Service pack', value: car.specs.serviceContract },
+].filter(Boolean) as { icon: string; label: string; value: string }[];
+const icons: any = { Gauge, Cog, Cylinder, Zap, Fuel, Palette, DoorOpen, MapPin, ShieldCheck, FileCheck, Wrench, Calendar: ShieldCheck };
+---
+<Layout title={`${car.title} — GTA Cars Dubai`} description={car.description}>
+  <article class="pt-[calc(var(--nav-h)+2rem)]">
+    <div class="lux-wide">
+      <a href="/our-cars" class="inline-flex items-center gap-2 text-[0.74rem] font-medium uppercase tracking-[0.14em] text-mist transition-colors hover:text-gold"><ArrowLeft class="h-4 w-4" />All cars</a>
+    </div>
+
+    <div class="lux-wide mt-6 grid gap-10 lg:grid-cols-[1.5fr_1fr] lg:gap-14">
+      <!-- Gallery -->
+      <div data-gallery>
+        <div class="relative overflow-hidden rounded-2xl border border-ivory/10 bg-coal">
+          <img data-main src={car.images[0]} alt={car.name} width="1400" height="1000" fetchpriority="high" decoding="async" class="aspect-[7/5] w-full object-cover" />
+          {car.sold && <span class="absolute left-4 top-4 rounded-full bg-ink/80 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-gold ring-1 ring-gold/40 backdrop-blur">Sold</span>}
+        </div>
+        {car.images.length > 1 && (
+          <div class="mt-3 grid grid-cols-4 gap-3 sm:grid-cols-6">
+            {car.images.map((img, i) => (
+              <button data-thumb data-src={img} class:list={['overflow-hidden rounded-lg border bg-coal transition-colors', i === 0 ? 'border-gold' : 'border-ivory/10 hover:border-ivory/40']} aria-label={`Photo ${i + 1}`}>
+                <img src={img} alt={`${car.name} photo ${i + 1}`} width="240" height="170" loading={i < 6 ? 'eager' : 'lazy'} decoding="async" class="aspect-[4/3] w-full object-cover" />
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <!-- Summary / CTA -->
+      <aside class="lg:sticky lg:top-[calc(var(--nav-h)+1.5rem)] lg:self-start">
+        <p class="text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-gold">{car.brand}{car.year ? ` · ${car.year}` : ''}</p>
+        <h1 class="mt-2 font-display text-[1.7rem] font-bold leading-tight text-ivory">{car.name}</h1>
+
+        <div class="mt-5 flex items-end gap-4 border-y border-ivory/10 py-5">
+          <div>
+            <p class="price-aed font-display text-3xl font-bold text-ivory">{fmtAED(car.priceAed)}</p>
+            {car.monthlyAed && <p class="mt-1 text-sm text-mist">from AED {car.monthlyAed.toLocaleString('en-US')}/month</p>}
+          </div>
+          <button data-wish data-id={car.slug} class="ml-auto inline-flex h-11 w-11 items-center justify-center rounded-full border border-ivory/15 text-ivory/80 transition-colors hover:border-gold/50 hover:text-gold" aria-label={`Save ${car.name}`} aria-pressed="false"><Heart class="h-5 w-5" /></button>
+        </div>
+
+        <div class="mt-6 flex flex-col gap-3">
+          <a href={waHref} target="_blank" rel="noopener" class="btn-gold py-4"><MessageCircle class="h-4 w-4" /> Enquire on WhatsApp</a>
+          <a href={contact.phonePrimaryHref} class="btn-primary py-4"><Phone class="h-4 w-4" /> Call {contact.phonePrimary}</a>
+        </div>
+
+        <div class="mt-5 grid grid-cols-2 gap-3">
+          <a href="/finance" class="card flex items-center gap-2.5 px-4 py-3.5 text-sm text-ivory/85 transition-colors hover:border-gold/40 hover:text-gold"><Landmark class="h-4 w-4 text-gold" /> Apply for finance</a>
+          <a href="/part-exchange" class="card flex items-center gap-2.5 px-4 py-3.5 text-sm text-ivory/85 transition-colors hover:border-gold/40 hover:text-gold"><ArrowLeftRight class="h-4 w-4 text-gold" /> Part exchange?</a>
+        </div>
+        <p class="mt-5 text-xs leading-relaxed text-faint">Inspection, RTA ownership transfer and secure bank-transfer payment — all handled under one roof.</p>
+      </aside>
+    </div>
+
+    <!-- Specs + description -->
+    <div class="lux-wide mt-16 grid gap-12 lg:grid-cols-[1.5fr_1fr] lg:gap-14">
+      <div>
+        <h2 class="font-display text-xl font-semibold text-ivory">Specifications</h2>
+        <dl class="mt-6 grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-ivory/10 bg-ivory/10 sm:grid-cols-2">
+          {specRows.map((r) => {
+            const Icon = icons[r.icon] || Gauge;
+            return (
+              <div class="flex items-center gap-3.5 bg-graphite px-5 py-4">
+                <Icon class="h-4 w-4 shrink-0 text-gold/80" />
+                <dt class="w-28 shrink-0 text-[0.74rem] uppercase tracking-[0.1em] text-faint">{r.label}</dt>
+                <dd class="text-sm font-medium text-ivory">{r.value}</dd>
+              </div>
+            );
+          })}
+        </dl>
+      </div>
+      <div>
+        <h2 class="font-display text-xl font-semibold text-ivory">About this car</h2>
+        <p class="mt-6 text-sm leading-relaxed text-mist">{car.description}</p>
+        <p class="mt-4 text-sm leading-relaxed text-mist">{car.title}.</p>
+      </div>
+    </div>
+
+    <!-- Similar -->
+    {sims.length > 0 && (
+      <section class="mt-20 border-t border-ivory/10 bg-coal py-16 sm:py-20">
+        <div class="lux-wide">
+          <h2 class="display-3 text-ivory">Similar cars</h2>
+          <!-- ★ Mobile: one per row -->
+          <div class="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {sims.map((c) => <CarCard car={c} />)}
+          </div>
+        </div>
+      </section>
+    )}
+  </article>
+</Layout>
+
+<script>
+  const main = document.querySelector('[data-main]') as HTMLImageElement | null;
+  document.querySelectorAll('[data-thumb]').forEach((t) => {
+    t.addEventListener('click', () => {
+      const src = (t as HTMLElement).dataset.src!;
+      if (main) main.src = src;
+      document.querySelectorAll('[data-thumb]').forEach((x) => { x.classList.remove('border-gold'); x.classList.add('border-ivory/10'); });
+      t.classList.add('border-gold'); t.classList.remove('border-ivory/10');
+    });
+  });
+</script>

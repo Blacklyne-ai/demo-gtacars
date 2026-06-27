@@ -1,0 +1,203 @@
+---
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { site, contact } from '../data/site';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  navVariant?: 'transparent' | 'solid';
+}
+
+const {
+  title = 'GTA Cars Dubai — Buy & Sell Quality Pre-Owned Cars',
+  description = 'GTA Cars is a Dubai based leading dealership for quality pre-owned cars. Buy from our showroom, sell your car, consign, part-exchange or finance — all under one roof. Fair, friendly and efficient, with no hidden fees.',
+  image = '/og.jpg',
+  navVariant = 'transparent',
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname.replace(/\.html$/, '').replace(/\/index$/, '/') || '/', Astro.site).href;
+const ldJson = {
+  '@context': 'https://schema.org',
+  '@type': 'AutoDealer',
+  name: site.name,
+  legalName: site.legalName,
+  url: Astro.site?.href,
+  image: new URL(image, Astro.site).href,
+  telephone: contact.phonePrimary,
+  email: contact.email,
+  priceRange: 'AED',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: contact.area,
+    addressRegion: 'Dubai',
+    addressCountry: 'AE',
+  },
+  areaServed: 'Dubai, United Arab Emirates',
+  openingHours: 'Mo-Su 10:00-20:00',
+  sameAs: [contact.instagram, contact.facebook],
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <link rel="icon" type="image/png" sizes="64x64" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#0A0A0B" />
+
+    <!-- Self-hosted fonts (font-display:optional in global.css → CLS≈0) -->
+    <link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/sora-700.woff2" as="font" type="font/woff2" crossorigin />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(image, Astro.site).href} />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+    <script type="application/ld+json" set:html={JSON.stringify(ldJson)} is:inline />
+  </head>
+  <body>
+    <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-pill focus:bg-gold focus:px-5 focus:py-3 focus:text-ink">Skip to content</a>
+
+    <Nav variant={navVariant} />
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <Footer />
+
+    <!-- Persistent WhatsApp button -->
+    <a href={contact.whatsapp} target="_blank" rel="noopener" aria-label="Chat on WhatsApp"
+      class="group fixed bottom-5 right-5 z-[95] inline-flex items-center gap-2.5 rounded-full bg-[#25D366] py-3 pl-3.5 pr-3.5 text-white shadow-[0_10px_30px_-6px_rgba(37,211,102,0.55)] transition-all duration-300 hover:pr-5 sm:bottom-6 sm:right-6">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm0 18.15c-1.52 0-3.01-.41-4.31-1.18l-.31-.18-3.2.84.85-3.12-.2-.32a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.82c0 4.54-3.7 8.23-8.24 8.23zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.48-1.38-1.73-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.1-.22-.16-.47-.28z"/></svg>
+      <span class="hidden max-w-0 overflow-hidden whitespace-nowrap text-[0.82rem] font-semibold opacity-0 transition-all duration-300 group-hover:max-w-[120px] group-hover:opacity-100 sm:inline">WhatsApp</span>
+    </a>
+
+    <!-- Cookie / privacy note (only first-party storage = saved cars). Hidden inside iframe embeds. -->
+    <div data-consent class="fixed inset-x-3 bottom-3 z-[90] hidden sm:inset-x-auto sm:bottom-6 sm:left-6 sm:max-w-sm">
+      <div class="card shadow-lift p-5">
+        <p class="text-sm leading-relaxed text-mist">
+          We use essential first-party storage only (your saved cars). No tracking cookies. See our
+          <a href="/privacy" class="text-ivory underline decoration-gold/50 underline-offset-2 hover:decoration-gold">privacy note</a>.
+        </p>
+        <button data-consent-ok class="btn-gold mt-4 w-full text-sm">Got it</button>
+      </div>
+    </div>
+
+    <script>
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const fxEls = Array.from(document.querySelectorAll('[data-reveal],[data-slide]')) as HTMLElement[];
+      const showAllFx = () => fxEls.forEach((el) => { el.style.opacity = '1'; el.style.transform = 'none'; });
+
+      // ── Reveals & side-slides via IntersectionObserver ──
+      if (reduce || !('IntersectionObserver' in window)) {
+        showAllFx();
+      } else {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((e) => {
+            if (!e.isIntersecting) return;
+            const el = e.target as HTMLElement;
+            const d = Number(el.dataset.delay || 0);
+            el.style.transition = `opacity 1.1s cubic-bezier(.22,1,.36,1) ${d}ms, transform 1.25s cubic-bezier(.22,1,.36,1) ${d}ms`;
+            el.style.opacity = '1';
+            el.style.transform = 'none';
+            io.unobserve(el);
+          });
+        }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+        fxEls.forEach((el) => io.observe(el));
+        setTimeout(() => fxEls.forEach((el) => {
+          if (parseFloat(getComputedStyle(el).opacity) < 0.1) {
+            el.style.transition = 'opacity 1s ease, transform 1s ease';
+            el.style.opacity = '1'; el.style.transform = 'none';
+          }
+        }), 1600);
+      }
+
+      // ── Lenis smooth scroll + GSAP scrub parallax ──
+      if (!reduce) {
+        Promise.all([import('gsap'), import('gsap/ScrollTrigger'), import('lenis')]).then(([g, s, l]: any[]) => {
+          const gsap = g.default ?? g.gsap;
+          const ScrollTrigger = s.ScrollTrigger ?? s.default;
+          const Lenis = l.default;
+          gsap.registerPlugin(ScrollTrigger);
+
+          const lenis = new Lenis({ duration: 1.15, smoothWheel: true });
+          lenis.on('scroll', ScrollTrigger.update);
+          gsap.ticker.add((t: number) => lenis.raf(t * 1000));
+          gsap.ticker.lagSmoothing(0);
+
+          gsap.utils.toArray('[data-parallax]').forEach((el: any) => {
+            const sect = el.closest('section') || el.parentElement || el;
+            gsap.fromTo(el, { yPercent: -9, scale: 1.34 }, {
+              yPercent: 9, scale: 1.16, ease: 'none',
+              scrollTrigger: { trigger: sect, start: 'top bottom', end: 'bottom top', scrub: 1 },
+            });
+          });
+
+          ScrollTrigger.refresh();
+          window.addEventListener('load', () => ScrollTrigger.refresh());
+        }).catch(() => {});
+      }
+
+      // ── Wishlist (localStorage, global) ──
+      const WK = 'gta-wishlist';
+      const read = (): string[] => { try { return JSON.parse(localStorage.getItem(WK) || '[]'); } catch { return []; } };
+      const write = (a: string[]) => { try { localStorage.setItem(WK, JSON.stringify(a)); } catch {} };
+      const sync = () => {
+        const ids = read();
+        document.querySelectorAll('[data-wish]').forEach((b) => {
+          const el = b as HTMLElement;
+          el.setAttribute('aria-pressed', String(ids.includes(el.dataset.id || '')));
+          el.classList.toggle('is-saved', ids.includes(el.dataset.id || ''));
+        });
+        document.querySelectorAll('[data-wish-count]').forEach((c) => {
+          const el = c as HTMLElement;
+          el.textContent = String(ids.length);
+          el.classList.toggle('hidden', ids.length === 0);
+        });
+        document.dispatchEvent(new CustomEvent('wishlist:change', { detail: ids }));
+      };
+      document.addEventListener('click', (e) => {
+        const btn = (e.target as HTMLElement).closest('[data-wish]') as HTMLElement | null;
+        if (!btn) return;
+        e.preventDefault();
+        const id = btn.dataset.id || '';
+        const ids = read();
+        const i = ids.indexOf(id);
+        if (i >= 0) ids.splice(i, 1); else ids.push(id);
+        write(ids);
+        sync();
+      });
+      sync();
+
+      // ── Consent note (once). Not shown inside iframe embeds. ──
+      let embedded = false;
+      try { embedded = window.self !== window.top; } catch { embedded = true; }
+      try {
+        const bar = document.querySelector('[data-consent]') as HTMLElement | null;
+        if (bar && !embedded && !localStorage.getItem('gta-consent')) {
+          bar.classList.remove('hidden');
+          bar.querySelector('[data-consent-ok]')?.addEventListener('click', () => {
+            localStorage.setItem('gta-consent', '1');
+            bar.classList.add('hidden');
+          });
+        }
+      } catch {}
+    </script>
+  </body>
+</html>

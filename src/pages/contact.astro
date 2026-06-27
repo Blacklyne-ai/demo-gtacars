@@ -1,0 +1,68 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { contact, site } from '../data/site';
+import { Phone, MessageCircle, Mail, Clock, MapPin } from '@lucide/astro';
+const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(contact.mapQuery)}&output=embed`;
+---
+<Layout title="Contact — GTA Cars Dubai" description="Get in touch with GTA Cars Dubai — call, WhatsApp or email. Quality pre-owned cars in Al Quoz, Dubai.">
+  <section class="border-b border-ivory/10 bg-coal pb-14 pt-[calc(var(--nav-h)+3.5rem)]">
+    <div class="lux-wide">
+      <p class="eyebrow mb-4">Contact</p>
+      <h1 class="display-1 max-w-3xl text-ivory">Let’s talk.</h1>
+      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-mist">
+        Thank you for considering our dealership for your automotive needs. One of our experts
+        will be delighted to answer any questions you may have. {site.about}
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-ink py-16 sm:py-20">
+    <div class="lux-wide grid gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-14">
+      <!-- Contact tiles (NO form — direct channels) -->
+      <div class="grid gap-4">
+        <a href={contact.phonePrimaryHref} class="card group flex items-center gap-4 p-5 transition-colors hover:border-gold/40">
+          <span class="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gold/12 text-gold"><Phone class="h-5 w-5" /></span>
+          <span>
+            <span class="block text-[0.72rem] uppercase tracking-[0.14em] text-faint">Call us</span>
+            <span class="block text-base font-semibold text-ivory transition-colors group-hover:text-gold">{contact.phonePrimary}</span>
+            <span class="block text-xs text-mist">Landline {contact.landline}</span>
+          </span>
+        </a>
+        <a href={contact.whatsapp} target="_blank" rel="noopener" class="card group flex items-center gap-4 p-5 transition-colors hover:border-gold/40">
+          <span class="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gold/12 text-gold"><MessageCircle class="h-5 w-5" /></span>
+          <span>
+            <span class="block text-[0.72rem] uppercase tracking-[0.14em] text-faint">WhatsApp</span>
+            <span class="block text-base font-semibold text-ivory transition-colors group-hover:text-gold">{contact.whatsappNumber}</span>
+            <span class="block text-xs text-mist">Fastest response</span>
+          </span>
+        </a>
+        <a href={contact.emailHref} class="card group flex items-center gap-4 p-5 transition-colors hover:border-gold/40">
+          <span class="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gold/12 text-gold"><Mail class="h-5 w-5" /></span>
+          <span>
+            <span class="block text-[0.72rem] uppercase tracking-[0.14em] text-faint">Email</span>
+            <span class="block text-base font-semibold text-ivory transition-colors group-hover:text-gold">{contact.email}</span>
+          </span>
+        </a>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="card flex flex-col gap-2 p-5">
+            <span class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gold/12 text-gold"><MapPin class="h-5 w-5" /></span>
+            <span class="text-[0.72rem] uppercase tracking-[0.14em] text-faint">Showroom</span>
+            <span class="text-sm font-medium text-ivory">{contact.area}</span>
+          </div>
+          <div class="card flex flex-col gap-2 p-5">
+            <span class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gold/12 text-gold"><Clock class="h-5 w-5" /></span>
+            <span class="text-[0.72rem] uppercase tracking-[0.14em] text-faint">Hours</span>
+            <span class="text-sm font-medium text-ivory">{contact.hours}</span>
+          </div>
+        </div>
+        <p class="text-xs leading-relaxed text-faint">Exact showroom address is confirmed on enquiry — message us and we’ll share directions to the nearest of our Dubai showrooms.</p>
+      </div>
+
+      <!-- Map -->
+      <div class="overflow-hidden rounded-2xl border border-ivory/10 bg-coal">
+        <iframe src={mapSrc} title="GTA Cars location — Al Quoz, Dubai" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+          class="h-full min-h-[420px] w-full grayscale-[0.2] [color-scheme:light]" style="border:0"></iframe>
+      </div>
+    </div>
+  </section>
+</Layout>

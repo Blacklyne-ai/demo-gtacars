@@ -1,0 +1,23 @@
+---
+import { Phone, MessageCircle } from '@lucide/astro';
+import { sellSpecialists } from '../data/site';
+---
+<!-- ★ Mobile rule: one specialist per row (grid-cols-1) → 2 → 3/5 -->
+<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+  {sellSpecialists.map((s, i) => (
+    <div class="card flex flex-col items-start gap-4 p-5" data-reveal data-delay={i * 60}>
+      <div class="flex items-center gap-3">
+        <span class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-steel font-display text-lg font-bold text-gold ring-1 ring-gold/25">{s.name[0]}</span>
+        <div>
+          <p class="font-display text-base font-semibold text-ivory">{s.name}</p>
+          <p class="text-[0.74rem] text-mist">Purchasing team</p>
+        </div>
+      </div>
+      <p class="price-aed text-sm text-mist">{s.phone}</p>
+      <div class="mt-auto grid w-full grid-cols-2 gap-2">
+        <a href={s.tel} class="btn-dark px-3 py-2.5 text-xs"><Phone class="h-3.5 w-3.5" />Call</a>
+        <a href={s.wa} target="_blank" rel="noopener" class="btn-gold px-3 py-2.5 text-xs"><MessageCircle class="h-3.5 w-3.5" />WhatsApp</a>
+      </div>
+    </div>
+  ))}
+</div>

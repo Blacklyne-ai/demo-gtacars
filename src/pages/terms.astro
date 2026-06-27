@@ -1,0 +1,44 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { site, contact } from '../data/site';
+const sections = [
+  { h: 'About these terms', items: [`These terms cover the use of the ${site.name} website and the pre-sale information shown on it. The full terms of any sale, purchase, consignment, part-exchange or finance agreement are set out in the signed contract for that transaction.`] },
+  { h: 'Vehicle listings & pricing', items: [
+    'All vehicles are quality pre-owned and sold subject to availability — stock changes daily.',
+    'Prices are shown in UAE Dirhams (AED). Monthly figures shown as “from AED x/month” are indicative finance examples; the exact amount depends on the bank’s approval, term and down payment.',
+    'Specifications, mileage and photos are provided in good faith from our records. Please confirm the exact details of any vehicle with our team before purchase.',
+  ] },
+  { h: 'Selling or consigning your car', items: [
+    'Valuations and offers are provided after inspection and are not binding until confirmed in writing.',
+    'You are under no obligation to sell your car to us; selling to us is completely free and entirely up to you.',
+    'On an agreed sale we handle the RTA ownership transfer and required paperwork, and pay you by secure bank transfer.',
+  ] },
+  { h: 'Finance', items: [
+    'Finance is arranged through leading UAE banks and is subject to their approval, terms and conditions. We coordinate the application; the bank sets the rate and terms.',
+  ] },
+  { h: 'Contact', items: [`Questions about these terms? Email ${contact.email} or call ${contact.phonePrimary}.`] },
+];
+---
+<Layout title="Terms — GTA Cars Dubai" description="Terms for using the GTA Cars Dubai website.">
+  <section class="bg-coal pb-12 pt-[calc(var(--nav-h)+3.5rem)]">
+    <div class="lux-narrow">
+      <p class="eyebrow mb-4">Legal</p>
+      <h1 class="display-2 text-ivory">Terms</h1>
+    </div>
+  </section>
+  <section class="bg-ink py-14">
+    <div class="lux-narrow space-y-9">
+      {sections.map((s) => (
+        <div>
+          <h2 class="font-display text-lg font-semibold text-ivory">{s.h}</h2>
+          <ul class="mt-3 space-y-2.5">
+            {s.items.map((it) => (
+              <li class="flex items-start gap-3 text-sm leading-relaxed text-mist"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold"></span>{it}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+      <p class="border-t border-ivory/10 pt-8 text-xs text-faint">Demo placeholder terms for a redesign. Final wording, the registered entity and trade-licence details are confirmed by GTA Cars before publication.</p>
+    </div>
+  </section>
+</Layout>

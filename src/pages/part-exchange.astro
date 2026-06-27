@@ -1,0 +1,55 @@
+---
+import Layout from '../layouts/Layout.astro';
+import LeadForm from '../components/LeadForm.astro';
+import { partExchange, letsTalk, contact, sell } from '../data/site';
+import { Check, MessageCircle, ArrowRight, ArrowLeftRight } from '@lucide/astro';
+---
+<Layout title="Part Exchange — GTA Cars Dubai" description={partExchange.body[0]}>
+  <section class="relative overflow-hidden border-b border-ivory/10 bg-coal pb-16 pt-[calc(var(--nav-h)+3.5rem)]">
+    <div class="lux-wide grid gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-20">
+      <div>
+        <p class="eyebrow mb-4 inline-flex items-center gap-2"><ArrowLeftRight class="h-4 w-4" /> Part exchange</p>
+        <h1 class="display-1 text-ivory">{partExchange.heroTitle}</h1>
+        {partExchange.body.map((p) => <p class="mt-6 max-w-xl text-base leading-relaxed text-mist">{p}</p>)}
+      </div>
+      <div class="lg:pl-4">
+        <div class="card p-6 shadow-lift sm:p-8">
+          <h2 class="font-display text-xl font-semibold text-ivory">Value my car</h2>
+          <p class="mt-1.5 text-sm text-mist">Get a transparent valuation and apply it to your next car.</p>
+          <div class="mt-6"><LeadForm fields={sell.formFields} submitLabel="Get my valuation" formName="part-exchange" /></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-ink py-20 sm:py-28">
+    <div class="lux-wide grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+      <div>
+        <p class="eyebrow mb-4" data-reveal>Why part exchange with GTA Cars?</p>
+        <h2 class="display-2 text-ivory" data-reveal>A smarter way into your next car.</h2>
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row" data-reveal>
+          <a href="/our-cars" class="btn-gold px-7 py-3.5">Browse our cars <ArrowRight class="h-4 w-4" /></a>
+          <a href={contact.whatsapp} target="_blank" rel="noopener" class="btn-primary px-7 py-3.5"><MessageCircle class="h-4 w-4" /> WhatsApp us</a>
+        </div>
+      </div>
+      <ul class="grid gap-4 sm:grid-cols-2">
+        {partExchange.why.map((w, i) => (
+          <li class="card flex items-start gap-3 p-5 text-sm leading-relaxed text-ivory/90" data-reveal data-delay={i * 50}>
+            <span class="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gold/15 text-gold"><Check class="h-3 w-3" /></span>{w}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="border-t border-ivory/10 bg-coal py-24 text-center sm:py-28">
+    <div class="lux-narrow">
+      <p class="eyebrow mb-5" data-reveal>Creating a 5-Star Customer Experience</p>
+      <h2 class="display-2 text-ivory" data-reveal>{letsTalk.body}</h2>
+      <div class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row" data-reveal>
+        <a href="/contact" class="btn-gold px-8 py-4">Contact us <ArrowRight class="h-4 w-4" /></a>
+        <a href={contact.whatsapp} target="_blank" rel="noopener" class="btn-primary px-8 py-4"><MessageCircle class="h-4 w-4" /> WhatsApp</a>
+      </div>
+    </div>
+  </section>
+</Layout>

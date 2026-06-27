@@ -1,0 +1,36 @@
+{
+  "slug": "2018-range-rover-autobiography-full-service-history-excellent-condition-gcc",
+  "title": "2018 Range Rover Autobiography, Full Service History, Excellent Condition, GCC",
+  "name": "Range Rover Autobiography",
+  "brand": "Range Rover",
+  "model": "Autobiography",
+  "year": 2018,
+  "bodyType": "SUV",
+  "priceAed": 145000,
+  "monthlyAed": 2755,
+  "specs": {
+    "mileageKm": 79243,
+    "transmission": "Automatic",
+    "cylinders": "8",
+    "horsepower": "518 HP",
+    "fuelType": "Gasoline",
+    "colour": "White",
+    "doors": "5",
+    "regional": "GCC",
+    "serviceHistory": "Full Service History",
+    "serviceContract": "GTA Service Contract (Available At Extra Cost)"
+  },
+  "description": "2018 Range Rover Autobiography · GCC specifications · 79,243 km · Automatic · 518 HP · Full Service History. Inspected and available now at our Dubai showroom.",
+  "images": [
+    "/images/cars/2018-range-rover-autobiography-full-service-history-excellent-condition-gcc/00.webp",
+    "/images/cars/2018-range-rover-autobiography-full-service-history-excellent-condition-gcc/01.webp",
+    "/images/cars/2018-range-rover-autobiography-full-service-history-excellent-condition-gcc/02.webp",
+    "/images/cars/2018-range-rover-autobiography-full-service-history-excellent-condition-gcc/03.webp",
+    "/images/cars/2018-range-rover-autobiography-full-service-history-excellent-condition-gcc/04.webp",
+    "/images/cars/2018-range-rover-autobiography-full-service-history-excellent-condition-gcc/05.webp",
+    "/images/cars/2018-range-rover-autobiography-full-service-history-excellent-condition-gcc/06.webp"
+  ],
+  "cardImage": "/images/cars/2018-range-rover-autobiography-full-service-history-excellent-condition-gcc/00-card.webp",
+  "sold": false,
+  "sourceUrl": "https://gtacars.ae/gta-showrooms/2018-range-rover-autobiography-full-service-history-excellent-condition-gcc/"
+}

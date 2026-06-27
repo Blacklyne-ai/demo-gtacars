@@ -1,0 +1,124 @@
+---
+import { Heart, Menu, X, ChevronDown, MessageCircle, Phone } from '@lucide/astro';
+import { nav, sellMenu, bodyTypes, contact, site } from '../data/site';
+
+interface Props { variant?: 'transparent' | 'solid' }
+const { variant = 'transparent' } = Astro.props;
+const path = Astro.url.pathname.replace(/\.html$/, '');
+const isActive = (href: string) => {
+  const base = href.split('#')[0];
+  if (base === '/our-cars') return path.startsWith('/our-cars');
+  if (base === '/sell-your-car') return ['/sell-your-car', '/consignment', '/part-exchange'].includes(path);
+  return base !== '/' && path.startsWith(base);
+};
+---
+
+<header data-nav class="fixed inset-x-0 top-0 z-50">
+  <div class="lux-wide flex justify-center pt-3 sm:pt-4">
+    <div data-pill class="glass flex w-full max-w-5xl items-center gap-2 rounded-full border border-ivory/10 px-2.5 py-2 shadow-[0_12px_40px_-14px_rgba(0,0,0,0.6)] transition-shadow duration-500">
+      <a href="/" class="shrink-0 pl-2 pr-1" aria-label={`${site.name} — home`}>
+        <img src="/logo.png" alt={site.name} width="375" height="200" class="h-9 w-auto sm:h-10" />
+      </a>
+
+      <!-- Desktop links -->
+      <nav class="mx-auto hidden items-center gap-0.5 lg:flex" aria-label="Primary">
+        {nav.map((item) =>
+          item.href === '/sell-your-car' ? (
+            <div class="group relative">
+              <a href="/sell-your-car" aria-haspopup="true"
+                class:list={['flex items-center gap-1 rounded-full px-4 py-2 text-[0.74rem] font-medium uppercase tracking-[0.13em] transition-colors', isActive(item.href) ? 'text-gold' : 'text-ivory/75 hover:bg-ivory/5 hover:text-ivory']}>
+                {item.label}<ChevronDown class="h-3.5 w-3.5 opacity-60 transition-transform group-hover:rotate-180" />
+              </a>
+              <div class="invisible absolute left-1/2 top-full w-[420px] -translate-x-1/2 pt-3 opacity-0 transition-all duration-300 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                <div class="overflow-hidden rounded-3xl border border-ivory/10 bg-graphite/95 p-6 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.7)] backdrop-blur-xl">
+                  <p class="eyebrow mb-4">Sell or trade with us</p>
+                  <div class="grid gap-1">
+                    {sellMenu.map((s) => (
+                      <a href={s.href} class="rounded-lg px-3 py-2.5 text-sm text-ivory/80 transition-colors hover:bg-ivory/5 hover:text-gold">{s.label}</a>
+                    ))}
+                  </div>
+                  <p class="mt-5 text-xs leading-relaxed text-mist">We buy any car — fair, friendly and efficient. No hidden fees.</p>
+                </div>
+              </div>
+            </div>
+          ) : item.href === '/our-cars' ? (
+            <div class="group relative">
+              <a href="/our-cars" aria-haspopup="true"
+                class:list={['flex items-center gap-1 rounded-full px-4 py-2 text-[0.74rem] font-medium uppercase tracking-[0.13em] transition-colors', isActive(item.href) ? 'text-gold' : 'text-ivory/75 hover:bg-ivory/5 hover:text-ivory']}>
+                {item.label}<ChevronDown class="h-3.5 w-3.5 opacity-60 transition-transform group-hover:rotate-180" />
+              </a>
+              <div class="invisible absolute left-1/2 top-full w-[360px] -translate-x-1/2 pt-3 opacity-0 transition-all duration-300 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                <div class="overflow-hidden rounded-3xl border border-ivory/10 bg-graphite/95 p-6 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.7)] backdrop-blur-xl">
+                  <p class="eyebrow mb-4">By body type</p>
+                  <div class="grid grid-cols-2 gap-1">
+                    {bodyTypes.slice(0, 8).map((b) => (
+                      <a href={`/our-cars?body=${encodeURIComponent(b)}`} class="rounded-lg px-3 py-2 text-sm text-ivory/75 transition-colors hover:bg-ivory/5 hover:text-gold">{b}</a>
+                    ))}
+                  </div>
+                  <a href="/our-cars" class="mt-4 inline-block text-sm font-medium text-gold hover:text-gold-lite">Browse all stock →</a>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <a href={item.href}
+              class:list={['rounded-full px-4 py-2 text-[0.74rem] font-medium uppercase tracking-[0.13em] transition-colors', isActive(item.href) ? 'text-gold' : 'text-ivory/75 hover:bg-ivory/5 hover:text-ivory']}>
+              {item.label}
+            </a>
+          )
+        )}
+      </nav>
+
+      <!-- Actions -->
+      <div class="ml-auto flex items-center gap-1 lg:ml-0">
+        <a href="/our-cars/wishlist" class="relative hidden rounded-full p-2.5 text-ivory/70 transition-colors hover:bg-ivory/5 hover:text-gold sm:inline-flex" aria-label="Saved cars">
+          <Heart class="h-[18px] w-[18px]" />
+          <span data-wish-count class="absolute -right-0 -top-0 hidden min-w-[17px] rounded-full bg-gold px-1 text-center text-[10px] font-semibold leading-[17px] text-ink">0</span>
+        </a>
+        <a href={contact.phonePrimaryHref} class="hidden rounded-full p-2.5 text-ivory/70 transition-colors hover:bg-ivory/5 hover:text-gold sm:inline-flex" aria-label="Call us"><Phone class="h-[18px] w-[18px]" /></a>
+        <a href="/sell-your-car" class="hidden rounded-full bg-gold px-5 py-2.5 text-[0.72rem] font-semibold uppercase tracking-[0.13em] text-ink transition-colors hover:bg-gold-lite lg:inline-flex">Sell your car</a>
+        <button data-menu-open class="rounded-full p-2 text-ivory lg:hidden" aria-label="Open menu" aria-expanded="false"><Menu class="h-6 w-6" /></button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile overlay menu -->
+<div data-menu class="fixed inset-0 z-[60] hidden">
+  <div data-menu-backdrop class="absolute inset-0 bg-ink/70 backdrop-blur-sm"></div>
+  <div data-menu-panel class="absolute right-0 top-0 flex h-full w-[88%] max-w-sm translate-x-full flex-col bg-graphite shadow-[0_0_80px_rgba(0,0,0,0.6)] transition-transform duration-400 ease-luxe">
+    <div class="flex h-[72px] items-center justify-between px-6">
+      <img src="/logo.png" alt={site.name} width="300" height="160" class="h-9 w-auto" />
+      <button data-menu-close class="rounded-full p-2 text-ivory" aria-label="Close menu"><X class="h-6 w-6" /></button>
+    </div>
+    <nav class="flex flex-col gap-0.5 overflow-y-auto px-6 pb-8 pt-2" aria-label="Mobile">
+      {nav.map((item) => (
+        <a href={item.href} class:list={['border-b border-ivory/8 py-3.5 font-display text-2xl', isActive(item.href) ? 'text-gold' : 'text-ivory']}>{item.label}</a>
+      ))}
+      <a href="/our-cars/wishlist" class="border-b border-ivory/8 py-3.5 font-display text-2xl text-ivory">Saved <span data-wish-count class="ml-1 hidden text-base text-gold">0</span></a>
+      <div class="mt-6 flex flex-col gap-3">
+        <a href="/sell-your-car" class="btn-gold py-3.5">Sell your car</a>
+        <a href={contact.whatsapp} target="_blank" rel="noopener" class="btn-primary py-3.5"><MessageCircle class="h-4 w-4" /> WhatsApp</a>
+        <a href={contact.phonePrimaryHref} class="btn-dark py-3.5"><Phone class="h-4 w-4" /> {contact.phonePrimary}</a>
+      </div>
+      <p class="mt-6 text-sm text-mist">{contact.hours}</p>
+    </nav>
+  </div>
+</div>
+
+<script>
+  const pill = document.querySelector('[data-pill]') as HTMLElement | null;
+  if (pill) {
+    const onScroll = () => pill.classList.toggle('shadow-[0_18px_50px_-12px_rgba(0,0,0,0.7)]', window.scrollY > 20);
+    onScroll(); window.addEventListener('scroll', onScroll, { passive: true });
+  }
+  const menu = document.querySelector('[data-menu]') as HTMLElement | null;
+  const panel = document.querySelector('[data-menu-panel]') as HTMLElement | null;
+  const openBtn = document.querySelector('[data-menu-open]') as HTMLElement | null;
+  const closeEls = document.querySelectorAll('[data-menu-close],[data-menu-backdrop]');
+  const open = () => { menu?.classList.remove('hidden'); requestAnimationFrame(() => panel?.classList.remove('translate-x-full')); document.body.style.overflow = 'hidden'; openBtn?.setAttribute('aria-expanded', 'true'); };
+  const close = () => { panel?.classList.add('translate-x-full'); document.body.style.overflow = ''; openBtn?.setAttribute('aria-expanded', 'false'); setTimeout(() => menu?.classList.add('hidden'), 400); };
+  openBtn?.addEventListener('click', open);
+  closeEls.forEach((el) => el.addEventListener('click', close));
+  menu?.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+</script>

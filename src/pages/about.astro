@@ -1,0 +1,85 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { about, services, site, contact, letsTalk } from '../data/site';
+import { ArrowRight, MessageCircle, Car, Tag, Handshake, ArrowLeftRight, Landmark, ClipboardCheck } from '@lucide/astro';
+const icons: any = { Car, Tag, Handshake, ArrowLeftRight, Landmark, ClipboardCheck };
+---
+<Layout title="About — GTA Cars Dubai" description={about.intro}>
+  <section class="border-b border-ivory/10 bg-coal pb-16 pt-[calc(var(--nav-h)+3.5rem)]">
+    <div class="lux-wide">
+      <p class="eyebrow mb-4">About us</p>
+      <h1 class="display-1 max-w-3xl text-ivory">A premier Dubai dealership, built on service.</h1>
+      <div class="mt-8 grid max-w-4xl gap-6 text-lg leading-relaxed text-mist sm:grid-cols-2">
+        <p>{about.intro}</p>
+        <p>{about.experience}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats (verbatim marketing, not asserted as audited fact) -->
+  <section class="border-b border-ivory/10 bg-ink py-14">
+    <div class="lux-wide grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-ivory/10 bg-ivory/10 sm:grid-cols-4">
+      {[
+        { k: '100+ yrs', v: 'Combined experience' },
+        { k: 'All makes', v: 'Bought & sold' },
+        { k: 'Under one roof', v: 'Inspect · transfer · pay' },
+        { k: '10+ languages', v: 'Multilingual team' },
+      ].map((s) => (
+        <div class="bg-graphite px-6 py-8 text-center">
+          <p class="font-display text-2xl font-bold text-gold">{s.k}</p>
+          <p class="mt-2 text-[0.78rem] uppercase tracking-[0.12em] text-mist">{s.v}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section id="services" class="scroll-mt-28 bg-ink py-20 sm:py-28">
+    <div class="lux-wide">
+      <div class="max-w-2xl">
+        <p class="eyebrow mb-4" data-reveal>What we do</p>
+        <h2 class="display-2 text-ivory" data-reveal>Everything a car needs, in one showroom.</h2>
+        <p class="mt-6 text-base leading-relaxed text-mist" data-reveal>{site.about}</p>
+      </div>
+      <div class="mt-12 grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-ivory/10 bg-ivory/10 sm:grid-cols-2 lg:grid-cols-3">
+        {services.map((s, i) => {
+          const Icon = icons[s.icon];
+          return (
+            <a href={s.href} class="group flex flex-col gap-4 bg-graphite p-7 transition-colors hover:bg-steel/60" data-reveal data-delay={i * 50}>
+              <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gold/12 text-gold"><Icon class="h-5 w-5" /></span>
+              <div>
+                <h3 class="font-display text-lg font-semibold text-ivory">{s.title}</h3>
+                <p class="mt-2 text-sm leading-relaxed text-mist">{s.body}</p>
+              </div>
+              <span class="mt-auto inline-flex items-center gap-1.5 text-[0.72rem] font-medium uppercase tracking-[0.14em] text-gold opacity-0 transition-opacity group-hover:opacity-100">Learn more <ArrowRight class="h-3.5 w-3.5" /></span>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <!-- Team -->
+  <section class="border-t border-ivory/10 bg-coal py-20 sm:py-24">
+    <div class="lux-wide">
+      <p class="eyebrow mb-4" data-reveal>Meet our team</p>
+      <h2 class="display-2 max-w-2xl text-ivory" data-reveal>Managers, sales, purchasing & finance — across our showrooms.</h2>
+      <div class="mt-10 flex flex-wrap gap-2.5">
+        {about.team.map((name) => (
+          <span class="chip text-ivory/85">{name}</span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-ink py-24 text-center sm:py-28">
+    <div class="lux-narrow">
+      <p class="eyebrow mb-5" data-reveal>{letsTalk.title}</p>
+      <h2 class="display-2 text-ivory" data-reveal>{letsTalk.body}</h2>
+      <div class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row" data-reveal>
+        <a href="/contact" class="btn-gold px-8 py-4">Contact us <ArrowRight class="h-4 w-4" /></a>
+        <a href={contact.whatsapp} target="_blank" rel="noopener" class="btn-primary px-8 py-4"><MessageCircle class="h-4 w-4" /> WhatsApp</a>
+      </div>
+    </div>
+  </section>
+</Layout>

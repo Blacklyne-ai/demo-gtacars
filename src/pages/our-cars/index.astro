@@ -1,0 +1,141 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import CarCard from '../../components/CarCard.astro';
+import { getCars, liveCars, activeBrands, bodyCounts } from '../../lib/cars';
+import { Search, SlidersHorizontal, X } from '@lucide/astro';
+
+const all = await getCars();
+const live = liveCars(all);
+const brands = activeBrands(live);
+const bodies = [...bodyCounts(live).entries()].filter(([b]) => b !== 'Other').sort((a, b) => b[1] - a[1]).map(([b]) => b);
+const prices = live.map((c) => c.priceAed ?? 0).filter(Boolean);
+const minP = Math.min(...prices), maxP = Math.max(...prices);
+const years = [...new Set(live.map((c) => c.year).filter(Boolean))].sort((a, b) => (b ?? 0) - (a ?? 0));
+
+const priceBrackets = [50000, 100000, 150000, 200000, 300000, 500000, 750000, 1000000];
+---
+<Layout title="Our Cars — GTA Cars Dubai pre-owned showroom" description="Browse quality pre-owned cars at GTA Cars Dubai — SUVs, coupes, sedans and supercars. Real AED prices, full specs, finance and part-exchange available.">
+  <!-- Header band -->
+  <section class="border-b border-ivory/10 bg-coal pb-10 pt-[calc(var(--nav-h)+3rem)]">
+    <div class="lux-wide">
+      <p class="eyebrow mb-4">The showroom</p>
+      <h1 class="display-2 text-ivory">Our cars</h1>
+      <p class="mt-4 max-w-2xl text-base leading-relaxed text-mist">
+        Quality pre-owned cars, inspected and ready to drive. Real prices in AED, full
+        specifications, with finance and part-exchange available on every vehicle.
+      </p>
+    </div>
+  </section>
+
+  <!-- Filter + results -->
+  <section class="bg-ink py-10 sm:py-14">
+    <div class="lux-wide">
+      <!-- Filter bar -->
+      <div class="card p-4 sm:p-5" data-filterbar>
+        <div class="flex flex-col gap-3 lg:flex-row lg:items-center">
+          <label class="relative flex-1">
+            <Search class="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-faint" />
+            <input data-f="search" type="search" placeholder="Search make or model…" aria-label="Search cars"
+              class="w-full rounded-full border border-ivory/15 bg-graphite py-3 pl-11 pr-4 text-sm text-ivory placeholder:text-faint focus:border-gold/50 focus:outline-none" />
+          </label>
+          <div class="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:flex">
+            <select data-f="brand" aria-label="Brand" class="rounded-full border border-ivory/15 bg-graphite px-4 py-3 text-sm text-ivory focus:border-gold/50 focus:outline-none">
+              <option value="">All makes</option>
+              {brands.map((b) => <option value={b}>{b}</option>)}
+            </select>
+            <select data-f="body" aria-label="Body type" class="rounded-full border border-ivory/15 bg-graphite px-4 py-3 text-sm text-ivory focus:border-gold/50 focus:outline-none">
+              <option value="">All bodies</option>
+              {bodies.map((b) => <option value={b}>{b}</option>)}
+            </select>
+            <select data-f="maxprice" aria-label="Max price" class="rounded-full border border-ivory/15 bg-graphite px-4 py-3 text-sm text-ivory focus:border-gold/50 focus:outline-none">
+              <option value="">Any price</option>
+              {priceBrackets.filter((p) => p <= maxP + 1).map((p) => <option value={p}>Up to AED {p.toLocaleString('en-US')}</option>)}
+            </select>
+            <select data-f="sort" aria-label="Sort" class="rounded-full border border-ivory/15 bg-graphite px-4 py-3 text-sm text-ivory focus:border-gold/50 focus:outline-none">
+              <option value="price-desc">Price: high → low</option>
+              <option value="price-asc">Price: low → high</option>
+              <option value="year-desc">Year: newest</option>
+              <option value="km-asc">Mileage: lowest</option>
+            </select>
+          </div>
+        </div>
+        <div class="mt-3 flex items-center justify-between">
+          <p class="text-sm text-mist"><span data-count class="font-semibold text-ivory">{live.length}</span> of {live.length} cars</p>
+          <button data-reset class="inline-flex items-center gap-1.5 text-[0.72rem] font-medium uppercase tracking-[0.14em] text-faint transition-colors hover:text-gold"><X class="h-3.5 w-3.5" />Reset</button>
+        </div>
+      </div>
+
+      <!-- ★ Mobile: ONE car per row -->
+      <div data-grid class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {live.map((car, i) => <CarCard car={car} eager={i < 3} />)}
+      </div>
+
+      <div data-empty class="hidden py-20 text-center">
+        <p class="font-display text-2xl text-ivory">No cars match those filters.</p>
+        <p class="mt-3 text-sm text-mist">Try widening your search, or <a href="/contact" class="text-gold underline decoration-gold/40 underline-offset-2">tell us what you’re after</a> — we source to order.</p>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  const bar = document.querySelector('[data-filterbar]');
+  const grid = document.querySelector('[data-grid]') as HTMLElement;
+  const cards = Array.from(document.querySelectorAll('[data-car]')) as HTMLElement[];
+  const countEl = document.querySelector('[data-count]') as HTMLElement;
+  const emptyEl = document.querySelector('[data-empty]') as HTMLElement;
+  const get = (k: string) => bar?.querySelector(`[data-f="${k}"]`) as HTMLInputElement | HTMLSelectElement | null;
+
+  const num = (el: HTMLElement, k: string) => Number(el.dataset[k] || 0);
+
+  function apply() {
+    const q = (get('search')?.value || '').trim().toLowerCase();
+    const brand = get('brand')?.value || '';
+    const body = get('body')?.value || '';
+    const maxprice = Number(get('maxprice')?.value || 0);
+    const sort = get('sort')?.value || 'price-desc';
+
+    let shown = 0;
+    cards.forEach((c) => {
+      const ok =
+        (!q || (c.dataset.name || '').includes(q) || (c.dataset.brand || '').toLowerCase().includes(q)) &&
+        (!brand || c.dataset.brand === brand) &&
+        (!body || c.dataset.body === body) &&
+        (!maxprice || num(c, 'price') <= maxprice);
+      c.classList.toggle('hidden', !ok);
+      if (ok) shown++;
+    });
+
+    // sort visible
+    const visible = cards.filter((c) => !c.classList.contains('hidden'));
+    visible.sort((a, b) => {
+      switch (sort) {
+        case 'price-asc': return num(a, 'price') - num(b, 'price');
+        case 'year-desc': return num(b, 'year') - num(a, 'year');
+        case 'km-asc': return (num(a, 'km') || 9e9) - (num(b, 'km') || 9e9);
+        default: return num(b, 'price') - num(a, 'price');
+      }
+    });
+    visible.forEach((c) => grid.appendChild(c));
+
+    countEl.textContent = String(shown);
+    emptyEl.classList.toggle('hidden', shown > 0);
+    grid.classList.toggle('hidden', shown === 0);
+  }
+
+  bar?.querySelectorAll('[data-f]').forEach((el) => {
+    el.addEventListener('input', apply);
+    el.addEventListener('change', apply);
+  });
+  document.querySelector('[data-reset]')?.addEventListener('click', () => {
+    bar?.querySelectorAll('[data-f]').forEach((el) => ((el as HTMLInputElement).value = el.tagName === 'SELECT' ? (el as HTMLSelectElement).options[0].value : ''));
+    apply();
+  });
+
+  // Preselect from URL (?brand= / ?body= / ?q=)
+  const params = new URLSearchParams(location.search);
+  if (params.get('brand') && get('brand')) (get('brand') as HTMLSelectElement).value = params.get('brand')!;
+  if (params.get('body') && get('body')) (get('body') as HTMLSelectElement).value = params.get('body')!;
+  if (params.get('q') && get('search')) (get('search') as HTMLInputElement).value = params.get('q')!;
+  apply();
+</script>

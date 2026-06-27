@@ -1,0 +1,165 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import CarCard from '../components/CarCard.astro';
+import LeadForm from '../components/LeadForm.astro';
+import SpecialistCards from '../components/SpecialistCards.astro';
+import { getCars, liveCars } from '../lib/cars';
+import { sell, services, contact, letsTalk, site } from '../data/site';
+import { ArrowRight, Check, MessageCircle, Phone, Car, Tag, Handshake, ArrowLeftRight, Landmark, ClipboardCheck } from '@lucide/astro';
+const icons = { Car, Tag, Handshake, ArrowLeftRight, Landmark, ClipboardCheck };
+
+const all = await getCars();
+const live = liveCars(all);
+// Featured: a diverse, premium-leaning handful for the homepage Buy block
+const featured = [...live].sort((a, b) => (b.priceAed ?? 0) - (a.priceAed ?? 0))
+  .filter((c, i, arr) => arr.findIndex((x) => x.brand === c.brand) === i) // one per brand for variety
+  .slice(0, 6);
+
+const heroImg = '/images/cars/2024-ferrari-roma2028-ferrari-warranty-and-service-pack-ferrari-service-history-gcc/00.webp';
+---
+<Layout>
+  <Hero image={heroImg} alt="Ferrari Roma at the GTA Cars showroom in Dubai" />
+
+  <!-- ───────────── SELL YOUR CAR (focus) ───────────── -->
+  <section id="sell" class="relative border-b border-ivory/10 bg-coal py-20 sm:py-28">
+    <div class="lux-wide">
+      <div class="grid gap-14 lg:grid-cols-[1fr_1.05fr] lg:gap-20">
+        <!-- Copy + bullets + specialists -->
+        <div>
+          <p class="eyebrow mb-4" data-reveal>Sell your car</p>
+          <h2 class="display-2 text-ivory" data-reveal>{sell.heroTitle}</h2>
+          <p class="mt-6 max-w-xl text-base leading-relaxed text-mist" data-reveal>{sell.heroBody}</p>
+
+          <ul class="mt-8 grid gap-3 sm:grid-cols-2">
+            {sell.bullets.map((b, i) => (
+              <li class="flex items-start gap-3 text-sm text-ivory/90" data-reveal data-delay={i * 60}>
+                <span class="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gold/15 text-gold"><Check class="h-3 w-3" /></span>
+                {b}
+              </li>
+            ))}
+          </ul>
+
+          <div class="mt-10" data-reveal>
+            <p class="text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-faint">Or contact our car buying specialists</p>
+            <div class="mt-5">
+              <SpecialistCards />
+            </div>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <div class="lg:pl-4" data-slide="right">
+          <div class="card p-6 shadow-lift sm:p-8">
+            <h3 class="font-display text-xl font-semibold text-ivory">Get your free valuation</h3>
+            <p class="mt-1.5 text-sm text-mist">No obligation. No hidden fees. We buy any car.</p>
+            <div class="mt-6">
+              <LeadForm fields={sell.formFields} submitLabel="Get my offer" formName="sell-home" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── PROCESS ───────────── -->
+  <section class="bg-ink py-20 sm:py-28">
+    <div class="lux-wide">
+      <div class="max-w-2xl">
+        <p class="eyebrow mb-4" data-reveal>What’s the process?</p>
+        <h2 class="display-2 text-ivory" data-reveal>From your driveway to paid, in four steps.</h2>
+      </div>
+      <div class="mt-14 grid gap-px overflow-hidden rounded-2xl border border-ivory/10 bg-ivory/10 sm:grid-cols-2 lg:grid-cols-4">
+        {sell.process.map((step, i) => (
+          <div class="flex flex-col bg-graphite p-7" data-reveal data-delay={i * 70}>
+            <span class="price-aed font-display text-3xl font-bold text-gold/80">{String(i + 1).padStart(2, '0')}</span>
+            <p class="mt-5 text-sm leading-relaxed text-ivory/85">{step}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── WHY GTA ───────────── -->
+  <section class="border-y border-ivory/10 bg-coal py-20 sm:py-28">
+    <div class="lux-wide">
+      <div class="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+        <div>
+          <p class="eyebrow mb-4" data-reveal>Why GTA Cars</p>
+          <h2 class="display-2 text-ivory" data-reveal>Reputation, not pressure.</h2>
+          <p class="mt-6 text-base leading-relaxed text-mist" data-reveal>{sell.closer} — handled professionally, end to end.</p>
+          <div class="mt-8 flex flex-col gap-3 sm:flex-row" data-reveal>
+            <a href={contact.whatsapp} target="_blank" rel="noopener" class="btn-gold px-7 py-3.5"><MessageCircle class="h-4 w-4" /> {sell.closerSub.includes('?') ? 'Sell your car now' : 'WhatsApp us'}</a>
+            <a href={contact.phonePrimaryHref} class="btn-primary px-7 py-3.5"><Phone class="h-4 w-4" /> {contact.phonePrimary}</a>
+          </div>
+        </div>
+        <ul class="grid gap-x-10 gap-y-5 sm:grid-cols-2">
+          {sell.why.map((w, i) => (
+            <li class="flex items-start gap-3 text-sm leading-relaxed text-ivory/85" data-reveal data-delay={i * 40}>
+              <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold"></span>{w}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── BUY / FEATURED STOCK ───────────── -->
+  <section class="bg-ink py-20 sm:py-28">
+    <div class="lux-wide">
+      <div class="flex flex-wrap items-end justify-between gap-6">
+        <div class="max-w-xl">
+          <p class="eyebrow mb-4" data-reveal>In the showroom</p>
+          <h2 class="display-2 text-ivory" data-reveal>Cars worth the drive over.</h2>
+        </div>
+        <a href="/our-cars" class="link-arrow" data-reveal>View all stock <ArrowRight class="h-4 w-4" /></a>
+      </div>
+
+      <!-- ★ Mobile: one car per row -->
+      <div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {featured.map((car, i) => <CarCard car={car} eager={i < 3} />)}
+      </div>
+      <div class="mt-12 flex justify-center">
+        <a href="/our-cars" class="btn-dark px-8 py-4 text-sm">Browse the full showroom <ArrowRight class="h-4 w-4" /></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── SERVICES ───────────── -->
+  <section class="border-t border-ivory/10 bg-coal py-20 sm:py-28">
+    <div class="lux-wide">
+      <div class="max-w-2xl">
+        <p class="eyebrow mb-4" data-reveal>Under one roof</p>
+        <h2 class="display-2 text-ivory" data-reveal>Everything a car needs, in one showroom.</h2>
+        <p class="mt-6 text-base leading-relaxed text-mist" data-reveal>{site.about}</p>
+      </div>
+      <div class="mt-12 grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-ivory/10 bg-ivory/10 sm:grid-cols-2 lg:grid-cols-3">
+        {services.map((s, i) => {
+          const Icon = (icons as any)[s.icon];
+          return (
+            <a href={s.href} class="group flex flex-col gap-4 bg-graphite p-7 transition-colors hover:bg-steel/60" data-reveal data-delay={i * 50}>
+              <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gold/12 text-gold"><Icon class="h-5 w-5" /></span>
+              <div>
+                <h3 class="font-display text-lg font-semibold text-ivory">{s.title}</h3>
+                <p class="mt-2 text-sm leading-relaxed text-mist">{s.body}</p>
+              </div>
+              <span class="mt-auto inline-flex items-center gap-1.5 text-[0.72rem] font-medium uppercase tracking-[0.14em] text-gold opacity-0 transition-opacity group-hover:opacity-100">Learn more <ArrowRight class="h-3.5 w-3.5" /></span>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── LET'S TALK ───────────── -->
+  <section class="relative overflow-hidden bg-ink py-24 sm:py-32">
+    <div class="lux-narrow text-center">
+      <p class="eyebrow mb-5" data-reveal>{letsTalk.title}</p>
+      <h2 class="display-2 text-ivory" data-reveal>{letsTalk.body}</h2>
+      <div class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row" data-reveal>
+        <a href="/contact" class="btn-gold px-8 py-4">Contact us <ArrowRight class="h-4 w-4" /></a>
+        <a href={contact.whatsapp} target="_blank" rel="noopener" class="btn-primary px-8 py-4"><MessageCircle class="h-4 w-4" /> WhatsApp</a>
+      </div>
+    </div>
+  </section>
+</Layout>

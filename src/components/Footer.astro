@@ -1,0 +1,78 @@
+---
+import { Phone, MessageCircle, Mail, Clock, MapPin } from '@lucide/astro';
+import { site, contact, nav, sellMenu } from '../data/site';
+const year = 2026;
+---
+<footer class="relative border-t border-ivory/10 bg-coal">
+  <div class="lux-wide py-16 sm:py-20">
+    <div class="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
+      <!-- Brand -->
+      <div>
+        <img src="/logo.png" alt={site.name} width="300" height="160" class="h-11 w-auto" />
+        <p class="mt-6 max-w-xs text-sm leading-relaxed text-mist">{site.about}</p>
+        <div class="mt-6 flex items-center gap-3">
+          <a href={contact.instagram} target="_blank" rel="noopener" aria-label="Instagram" class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-ivory/12 text-ivory/70 transition-colors hover:border-gold/50 hover:text-gold">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16zm0 1.62c-3.15 0-3.5.01-4.74.07-.9.04-1.39.19-1.71.32-.43.17-.74.37-1.06.69-.32.32-.52.63-.69 1.06-.13.32-.28.81-.32 1.71-.06 1.24-.07 1.59-.07 4.74s.01 3.5.07 4.74c.04.9.19 1.39.32 1.71.17.43.37.74.69 1.06.32.32.63.52 1.06.69.32.13.81.28 1.71.32 1.24.06 1.59.07 4.74.07s3.5-.01 4.74-.07c.9-.04 1.39-.19 1.71-.32.43-.17.74-.37 1.06-.69.32-.32.52-.63.69-1.06.13-.32.28-.81.32-1.71.06-1.24.07-1.59.07-4.74s-.01-3.5-.07-4.74c-.04-.9-.19-1.39-.32-1.71a2.85 2.85 0 0 0-.69-1.06 2.85 2.85 0 0 0-1.06-.69c-.32-.13-.81-.28-1.71-.32-1.24-.06-1.59-.07-4.74-.07zm0 2.76a5.46 5.46 0 1 1 0 10.92 5.46 5.46 0 0 1 0-10.92zm0 9a3.54 3.54 0 1 0 0-7.08 3.54 3.54 0 0 0 0 7.08zm6.95-9.2a1.27 1.27 0 1 1-2.55 0 1.27 1.27 0 0 1 2.55 0z"/></svg>
+          </a>
+          <a href={contact.facebook} target="_blank" rel="noopener" aria-label="Facebook" class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-ivory/12 text-ivory/70 transition-colors hover:border-gold/50 hover:text-gold">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5 3.66 9.15 8.44 9.94v-7.03H7.9v-2.9h2.54V9.85c0-2.52 1.5-3.91 3.78-3.91 1.1 0 2.24.2 2.24.2v2.47h-1.26c-1.24 0-1.63.78-1.63 1.57v1.88h2.78l-.44 2.9h-2.34V22c4.78-.79 8.44-4.94 8.44-9.94z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Buy / Sell -->
+      <nav aria-label="Inventory & selling">
+        <p class="eyebrow mb-5">Cars</p>
+        <ul class="space-y-3 text-sm text-mist">
+          <li><a href="/our-cars" class="transition-colors hover:text-gold">Browse our stock</a></li>
+          {sellMenu.map((s) => <li><a href={s.href} class="transition-colors hover:text-gold">{s.label}</a></li>)}
+          <li><a href="/finance" class="transition-colors hover:text-gold">Car finance</a></li>
+          <li><a href="/our-cars/wishlist" class="transition-colors hover:text-gold">Saved cars</a></li>
+        </ul>
+      </nav>
+
+      <!-- Menu -->
+      <nav aria-label="Company">
+        <p class="eyebrow mb-5">Company</p>
+        <ul class="space-y-3 text-sm text-mist">
+          {nav.map((n) => <li><a href={n.href} class="transition-colors hover:text-gold">{n.label}</a></li>)}
+          <li><a href="/privacy" class="transition-colors hover:text-gold">Privacy</a></li>
+          <li><a href="/terms" class="transition-colors hover:text-gold">Terms</a></li>
+        </ul>
+      </nav>
+
+      <!-- Contact + newsletter -->
+      <div>
+        <p class="eyebrow mb-5">Get in touch</p>
+        <ul class="space-y-3.5 text-sm text-mist">
+          <li><a href={contact.phonePrimaryHref} class="inline-flex items-center gap-2.5 transition-colors hover:text-gold"><Phone class="h-4 w-4 text-gold" />{contact.phonePrimary}</a></li>
+          <li><a href={contact.whatsapp} target="_blank" rel="noopener" class="inline-flex items-center gap-2.5 transition-colors hover:text-gold"><MessageCircle class="h-4 w-4 text-gold" />WhatsApp us</a></li>
+          <li><a href={contact.emailHref} class="inline-flex items-center gap-2.5 transition-colors hover:text-gold"><Mail class="h-4 w-4 text-gold" />{contact.email}</a></li>
+          <li class="inline-flex items-center gap-2.5"><MapPin class="h-4 w-4 text-gold" />{contact.area}</li>
+          <li class="inline-flex items-center gap-2.5"><Clock class="h-4 w-4 text-gold" />{contact.hours}</li>
+        </ul>
+        <form class="mt-7" data-newsletter aria-label="Newsletter">
+          <label for="nl" class="sr-only">Email for stock updates</label>
+          <div class="flex overflow-hidden rounded-full border border-ivory/15 bg-graphite focus-within:border-gold/50">
+            <input id="nl" type="email" required placeholder="Email for stock alerts" class="w-full bg-transparent px-4 py-2.5 text-sm text-ivory placeholder:text-faint focus:outline-none" />
+            <button type="submit" class="shrink-0 bg-gold px-4 text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-ink transition-colors hover:bg-gold-lite">Join</button>
+          </div>
+          <p data-nl-msg class="mt-2 hidden text-xs text-gold">Thanks — we’ll be in touch. (Demo: not yet connected.)</p>
+        </form>
+      </div>
+    </div>
+
+    <div class="mt-14 flex flex-col gap-3 border-t border-ivory/10 pt-7 text-xs text-faint sm:flex-row sm:items-center sm:justify-between">
+      <p>© {year} {site.name}. Quality pre-owned cars in Dubai. Buy · Sell · Consign · Part-exchange · Finance.</p>
+      <p>A Blacklyne demo redesign · <a href="/privacy" class="hover:text-gold">Privacy</a> · <a href="/terms" class="hover:text-gold">Terms</a></p>
+    </div>
+  </div>
+
+  <script>
+    document.querySelector('[data-newsletter]')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      (e.currentTarget as HTMLFormElement).querySelector('[data-nl-msg]')?.classList.remove('hidden');
+      (e.currentTarget as HTMLFormElement).reset();
+    });
+  </script>
+</footer>

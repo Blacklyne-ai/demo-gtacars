@@ -1,0 +1,119 @@
+/* ──────────────────────────────────────────────────────────────
+   GTA Cars Dubai — Design System (Single Source of Truth: :root)
+   Cinematic DARK dealer luxury, derived from the logo (brass/olive-gold
+   emblem on transparent). Deep cinematic black canvas, warm ivory ink,
+   one restrained brass-gold accent (prices, CTAs, hairlines). Cars first.
+   Sora display (architectural) + Inter UI/specs. Self-hosted fonts.
+   ────────────────────────────────────────────────────────────── */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face { font-family: 'Inter Variable'; font-style: normal; font-weight: 100 900; font-display: optional; src: url('/fonts/inter.woff2') format('woff2'); }
+@font-face { font-family: 'Sora'; font-style: normal; font-weight: 600; font-display: optional; src: url('/fonts/sora-600.woff2') format('woff2'); }
+@font-face { font-family: 'Sora'; font-style: normal; font-weight: 700; font-display: optional; src: url('/fonts/sora-700.woff2') format('woff2'); }
+
+:root {
+  --rgb-ink: 10 10 11;          /* #0A0A0B deepest cinematic page ground */
+  --rgb-coal: 18 18 20;         /* #121214 alternating section */
+  --rgb-graphite: 24 24 27;     /* #18181B card / panel surface */
+  --rgb-steel: 35 35 39;        /* #232327 raised / fill / border */
+  --rgb-ivory: 244 242 236;     /* #F4F2EC PRIMARY text on dark */
+  --rgb-mist: 180 175 164;      /* #B4AFA4 secondary text */
+  --rgb-faint: 124 120 111;     /* #7C786F faint label / tertiary */
+  --rgb-line: 244 242 236;      /* hairline base (used at low alpha) */
+  --rgb-gold: 194 174 74;       /* #C2AE4A brass accent (logo-bright) */
+  --rgb-gold-lite: 220 203 114; /* #DCCB72 highlight / shimmer */
+  --rgb-gold-deep: 171 156 52;  /* #AB9C34 logo-true core, borders/hover */
+  --nav-h: 84px;
+}
+
+@layer base {
+  * { -webkit-tap-highlight-color: transparent; }
+  html { scroll-behavior: smooth; background: rgb(var(--rgb-ink)); -webkit-text-size-adjust: 100%; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+  }
+  body {
+    background: rgb(var(--rgb-ink));
+    color: rgb(var(--rgb-ivory));
+    font-family: 'Inter Variable', Inter, system-ui, sans-serif;
+    font-feature-settings: 'cv02','cv03','cv04','ss01';
+    font-size: 1rem; line-height: 1.6;
+    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+    overflow-x: clip; /* clip (not hidden) → no scroll container → position:sticky stays pinned */
+  }
+  h1, h2, h3, .font-display {
+    font-family: 'Sora', Inter, system-ui, sans-serif;
+    font-weight: 600; letter-spacing: -0.02em; line-height: 1.05;
+  }
+  h4 { font-family: 'Inter Variable', Inter, sans-serif; font-weight: 600; letter-spacing: -0.01em; }
+  ::selection { background: rgb(var(--rgb-gold) / 0.30); color: rgb(var(--rgb-ivory)); }
+  :focus-visible { outline: 1px solid rgb(var(--rgb-gold) / 0.85); outline-offset: 4px; }
+  img { content-visibility: auto; }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: rgb(var(--rgb-coal)); }
+  ::-webkit-scrollbar-thumb { background: rgb(var(--rgb-steel)); border-radius: 999px; border: 3px solid rgb(var(--rgb-coal)); }
+  ::-webkit-scrollbar-thumb:hover { background: rgb(var(--rgb-gold) / 0.6); }
+}
+
+@layer components {
+  .lux-container { @apply mx-auto w-full max-w-6xl px-5 sm:px-10 lg:px-12; }
+  .lux-wide { @apply mx-auto w-full max-w-7xl px-5 sm:px-10 lg:px-14; }
+  .lux-narrow { @apply mx-auto w-full max-w-3xl px-5 sm:px-10; }
+
+  .eyebrow { @apply inline-block text-[0.7rem] font-semibold uppercase tracking-[0.3em] text-gold; }
+
+  .display-1 { @apply font-display text-[clamp(2.6rem,6.4vw,5.6rem)] font-bold leading-[1.02]; }
+  .display-2 { @apply font-display text-[clamp(2rem,4.2vw,3.4rem)] font-semibold leading-[1.06]; }
+  .display-3 { @apply font-display text-[clamp(1.5rem,2.8vw,2.3rem)] font-semibold leading-[1.12]; }
+
+  /* Buttons */
+  .btn { @apply inline-flex items-center justify-center gap-2 text-[0.82rem] font-medium leading-none transition-all duration-500 ease-luxe; }
+  .btn-primary { @apply btn rounded-full border border-ivory/25 px-7 py-3.5 text-ivory hover:border-ivory hover:bg-ivory hover:text-ink; }
+  .btn-gold { @apply btn rounded-full bg-gold px-7 py-3.5 font-semibold text-ink; }
+  .btn-gold:hover { background: rgb(var(--rgb-gold-lite)); }
+  .btn-dark { @apply btn rounded-full bg-graphite px-7 py-3.5 text-ivory ring-1 ring-inset ring-ivory/15 hover:ring-gold/50; }
+  .btn-ghost { @apply btn px-2 py-1 text-mist hover:text-gold; }
+  .btn-block { @apply w-full; }
+
+  .link-arrow { @apply inline-flex items-center gap-2 text-[0.82rem] font-medium uppercase tracking-[0.16em] text-ivory transition-colors hover:text-gold; }
+  .link-arrow svg { transition: transform .5s cubic-bezier(.22,1,.36,1); }
+  .link-arrow:hover svg { transform: translateX(4px); }
+
+  /* Surfaces */
+  .card { @apply rounded-xl border border-ivory/10 bg-graphite; }
+  .hairline { @apply border-ivory/10; }
+  .rule { @apply h-px w-full bg-ivory/10; }
+  .rule-gold { height: 1px; background: linear-gradient(90deg, rgb(var(--rgb-gold) / 0.7), transparent); }
+
+  .chip { @apply inline-flex items-center gap-1.5 rounded-full border border-ivory/12 px-3.5 py-1.5 text-[0.72rem] font-medium uppercase tracking-[0.12em] text-mist transition-colors; }
+
+  /* Glass nav (dark) */
+  .glass { background: rgb(var(--rgb-ink) / 0.6); backdrop-filter: blur(18px) saturate(1.2); -webkit-backdrop-filter: blur(18px) saturate(1.2); }
+
+  /* Filter / category pills */
+  .cat-pill { @apply shrink-0 whitespace-nowrap rounded-full border border-ivory/12 px-4 py-2 text-[0.75rem] font-medium uppercase tracking-[0.1em] text-mist transition-all duration-300; }
+  .cat-pill:hover { @apply border-ivory/30 text-ivory; }
+  .cat-pill.is-on { @apply border-gold bg-gold text-ink; }
+
+  /* Scroll reveal — gated on html.js (visible without JS) */
+  .js [data-reveal], .js [data-slide] { opacity: 0; will-change: opacity, transform; }
+  .js [data-reveal] { transform: translateY(30px); }
+  .js [data-slide="left"] { transform: translateX(-48px); }
+  .js [data-slide="right"] { transform: translateX(48px); }
+  @media (prefers-reduced-motion: reduce) { .js [data-reveal], .js [data-slide] { opacity: 1 !important; transform: none !important; } }
+
+  .price-aed { font-variant-numeric: tabular-nums; letter-spacing: 0; }
+  [data-wish].is-saved { color: rgb(var(--rgb-gold)); }
+  [data-wish].is-saved svg { fill: currentColor; }
+
+  /* Parallax media */
+  .fx-img { will-change: transform; transform: scale(1.3); }
+  .parallax { will-change: transform; }
+  .parallax img, img.parallax { transform: scale(1.18); }
+
+  /* Text-on-image safety (cinematic hero overlays) */
+  .text-shadow-cine { text-shadow: 0 2px 28px rgb(0 0 0 / 0.6), 0 1px 4px rgb(0 0 0 / 0.5); }
+}

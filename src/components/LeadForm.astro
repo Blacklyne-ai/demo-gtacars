@@ -1,0 +1,65 @@
+---
+// Front-end-only lead form (no backend wired — see JUDGEMENT_CALLS.md).
+// On submit: shows a confirmation + offers WhatsApp so no lead is lost.
+import { MessageCircle } from '@lucide/astro';
+import { contact } from '../data/site';
+
+interface Field { label: string; type?: string; options?: string[]; full?: boolean }
+interface Props {
+  fields: string[];
+  submitLabel?: string;
+  intro?: string;
+  formName?: string;
+}
+const { fields, submitLabel = 'Submit', intro, formName = 'lead' } = Astro.props;
+
+// Map verbatim labels → input config
+const cfg = (label: string): Field => {
+  const l = label.toLowerCase();
+  if (l.includes('email')) return { label, type: 'email' };
+  if (l.includes('phone')) return { label, type: 'tel' };
+  if (l.includes('year') || l.includes('km') || l.includes('mileage') || l.includes('price')) return { label, type: 'text' };
+  if (l.includes('employment')) return { label, options: ['Employed', 'Self-employed'] };
+  if (l.includes('asking') || l.includes('message')) return { label, full: true };
+  return { label };
+};
+const items = fields.map(cfg);
+---
+<form class="grid gap-4 sm:grid-cols-2" data-leadform data-name={formName} novalidate>
+  {intro && <p class="sm:col-span-2 text-sm text-mist">{intro}</p>}
+  {items.map((f) => (
+    <label class:list={['flex flex-col gap-1.5', f.full && 'sm:col-span-2']}>
+      <span class="text-[0.72rem] font-medium uppercase tracking-[0.14em] text-faint">{f.label}</span>
+      {f.options ? (
+        <select name={f.label} class="rounded-xl border border-ivory/15 bg-graphite px-4 py-3 text-sm text-ivory focus:border-gold/60 focus:outline-none">
+          <option value="" disabled selected>Select…</option>
+          {f.options.map((o) => <option value={o}>{o}</option>)}
+        </select>
+      ) : (
+        <input name={f.label} type={f.type || 'text'} placeholder={f.label}
+          class="rounded-xl border border-ivory/15 bg-graphite px-4 py-3 text-sm text-ivory placeholder:text-faint focus:border-gold/60 focus:outline-none" />
+      )}
+    </label>
+  ))}
+
+  <div class="sm:col-span-2 mt-2 flex flex-col gap-3 sm:flex-row sm:items-center">
+    <button type="submit" class="btn-gold px-8 py-3.5 sm:w-auto w-full">{submitLabel}</button>
+    <a href={contact.whatsapp} target="_blank" rel="noopener" class="btn-primary px-6 py-3.5 sm:w-auto w-full"><MessageCircle class="h-4 w-4" />Or message us on WhatsApp</a>
+  </div>
+
+  <p data-form-ok class="sm:col-span-2 hidden rounded-xl border border-gold/30 bg-gold/10 px-4 py-3 text-sm text-ivory">
+    Thank you — your details are noted. A member of our team will be in touch shortly. <span class="text-faint">(Demo: form is not yet connected to a backend.)</span>
+  </p>
+</form>
+
+<script>
+  document.querySelectorAll('[data-leadform]').forEach((form) => {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const f = e.currentTarget as HTMLFormElement;
+      f.querySelector('[data-form-ok]')?.classList.remove('hidden');
+      f.querySelectorAll('input,select').forEach((el) => ((el as HTMLInputElement).value = ''));
+      f.querySelector('[data-form-ok]')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  });
+</script>

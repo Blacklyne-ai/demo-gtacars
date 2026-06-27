@@ -1,0 +1,32 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { site, contact } from '../data/site';
+const sections = [
+  { h: 'Who we are', p: `${site.name} is a Dubai-based dealership for quality pre-owned cars. This privacy note explains what we collect through this website. The registered trade-licence entity is confirmed by the operator before go-live (placeholder).` },
+  { h: 'What this site stores', p: 'This website uses essential first-party browser storage only — your shortlisted cars are saved locally on your device (localStorage) so your list persists between visits. We do not set advertising or tracking cookies by default.' },
+  { h: 'Information you send us', p: 'When you submit an enquiry, valuation, consignment, part-exchange or finance form, you provide details such as your name, phone number, email and vehicle information. We use these only to respond to your enquiry and to provide the service you asked for.' },
+  { h: 'How we contact you', p: `We may contact you by phone, WhatsApp or email using the details you provide. You can reach us any time at ${contact.email} or ${contact.phonePrimary}.` },
+  { h: 'Sharing', p: 'For finance enquiries we coordinate with UAE banks on your behalf; we share only what is necessary to process your application. We do not sell your personal data.' },
+  { h: 'Your choices', p: `You can ask us to access, correct or delete the information you have shared by emailing ${contact.email}. You can clear your saved cars at any time by clearing your browser storage.` },
+  { h: 'Analytics & marketing', p: 'Any analytics or advertising pixels (e.g. for campaigns) will only load after your consent. This is configured before launch (Operator-TODO).' },
+];
+---
+<Layout title="Privacy — GTA Cars Dubai" description="How GTA Cars Dubai handles your information.">
+  <section class="bg-coal pb-12 pt-[calc(var(--nav-h)+3.5rem)]">
+    <div class="lux-narrow">
+      <p class="eyebrow mb-4">Legal</p>
+      <h1 class="display-2 text-ivory">Privacy note</h1>
+    </div>
+  </section>
+  <section class="bg-ink py-14">
+    <div class="lux-narrow space-y-9">
+      {sections.map((s) => (
+        <div>
+          <h2 class="font-display text-lg font-semibold text-ivory">{s.h}</h2>
+          <p class="mt-3 text-sm leading-relaxed text-mist">{s.p}</p>
+        </div>
+      ))}
+      <p class="border-t border-ivory/10 pt-8 text-xs text-faint">This is demo placeholder copy for a redesign. Final legal wording and the registered entity / trade licence are confirmed by GTA Cars before publication.</p>
+    </div>
+  </section>
+</Layout>
