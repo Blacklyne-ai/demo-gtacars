@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import BrandStrip from '../components/BrandStrip.astro';
 import StatsBand from '../components/StatsBand.astro';
-import CarCard from '../components/CarCard.astro';
+import HorizontalFleet from '../components/HorizontalFleet.astro';
 import LeadForm from '../components/LeadForm.astro';
 import SpecialistCards from '../components/SpecialistCards.astro';
 import { getCars, liveCars } from '../lib/cars';
@@ -13,10 +13,10 @@ const icons = { Car, Tag, Handshake, ArrowLeftRight, Landmark, ClipboardCheck };
 
 const all = await getCars();
 const live = liveCars(all);
-// Featured: a diverse, premium-leaning handful for the homepage Buy block
-const featured = [...live].sort((a, b) => (b.priceAed ?? 0) - (a.priceAed ?? 0))
-  .filter((c, i, arr) => arr.findIndex((x) => x.brand === c.brand) === i) // one per brand for variety
-  .slice(0, 6);
+// Showcase set for the horizontal fleet — one premium car per brand, by price (variety + travel)
+const showcase = [...live].sort((a, b) => (b.priceAed ?? 0) - (a.priceAed ?? 0))
+  .filter((c, i, arr) => arr.findIndex((x) => x.brand === c.brand) === i)
+  .slice(0, 10);
 
 const heroImg = '/images/cars/2024-ferrari-roma2028-ferrari-warranty-and-service-pack-ferrari-service-history-gcc/00.webp';
 ---
@@ -32,7 +32,7 @@ const heroImg = '/images/cars/2024-ferrari-roma2028-ferrari-warranty-and-service
         <!-- Copy + bullets -->
         <div>
           <p class="eyebrow mb-4" data-reveal>Sell your car</p>
-          <h2 class="display-2 text-ivory" data-reveal>{sell.heroTitle}</h2>
+          <h2 class="display-2 text-ivory" data-lines>{sell.heroTitle}</h2>
           <p class="mt-6 max-w-xl text-base leading-relaxed text-mist" data-reveal>{sell.heroBody}</p>
 
           <ul class="mt-8 grid gap-3 sm:grid-cols-2">
@@ -72,7 +72,7 @@ const heroImg = '/images/cars/2024-ferrari-roma2028-ferrari-warranty-and-service
     <div class="lux-wide">
       <div class="max-w-2xl">
         <p class="eyebrow mb-4" data-reveal>What’s the process?</p>
-        <h2 class="display-2 text-ivory" data-reveal>From your driveway to paid, in four steps.</h2>
+        <h2 class="display-2 text-ivory" data-lines>From your driveway to paid, in four steps.</h2>
       </div>
       <div class="mt-14 grid gap-px overflow-hidden rounded-2xl border border-ivory/10 bg-ivory/10 sm:grid-cols-2 lg:grid-cols-4">
         {sell.process.map((step, i) => (
@@ -91,7 +91,7 @@ const heroImg = '/images/cars/2024-ferrari-roma2028-ferrari-warranty-and-service
       <div class="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
         <div>
           <p class="eyebrow mb-4" data-reveal>Why GTA Cars</p>
-          <h2 class="display-2 text-ivory" data-reveal>Reputation, not pressure.</h2>
+          <h2 class="display-2 text-ivory" data-lines>Reputation, not pressure.</h2>
           <p class="mt-6 text-base leading-relaxed text-mist" data-reveal>{sell.closer} — handled professionally, end to end.</p>
           <div class="mt-8 flex flex-col gap-3 sm:flex-row" data-reveal>
             <a href={contact.whatsapp} target="_blank" rel="noopener" class="btn-gold px-7 py-3.5"><MessageCircle class="h-4 w-4" /> {sell.closerSub.includes('?') ? 'Sell your car now' : 'WhatsApp us'}</a>
@@ -111,33 +111,15 @@ const heroImg = '/images/cars/2024-ferrari-roma2028-ferrari-warranty-and-service
 
   <StatsBand />
 
-  <!-- ───────────── BUY / FEATURED STOCK ───────────── -->
-  <section class="bg-ink py-20 sm:py-28">
-    <div class="lux-wide">
-      <div class="flex flex-wrap items-end justify-between gap-6">
-        <div class="max-w-xl">
-          <p class="eyebrow mb-4" data-reveal>In the showroom</p>
-          <h2 class="display-2 text-ivory" data-reveal>Cars worth the drive over.</h2>
-        </div>
-        <a href="/our-cars" class="link-arrow" data-reveal>View all stock <ArrowRight class="h-4 w-4" /></a>
-      </div>
-
-      <!-- ★ Mobile: one car per row -->
-      <div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {featured.map((car, i) => <CarCard car={car} eager={i < 3} />)}
-      </div>
-      <div class="mt-12 flex justify-center">
-        <a href="/our-cars" class="btn-dark px-8 py-4 text-sm">Browse the full showroom <ArrowRight class="h-4 w-4" /></a>
-      </div>
-    </div>
-  </section>
+  <!-- ───────────── BUY / FEATURED STOCK (horizontal scrub showcase) ───────────── -->
+  <HorizontalFleet cars={showcase} />
 
   <!-- ───────────── SERVICES ───────────── -->
   <section class="border-t border-ivory/10 bg-coal py-20 sm:py-28">
     <div class="lux-wide">
       <div class="max-w-2xl">
         <p class="eyebrow mb-4" data-reveal>Under one roof</p>
-        <h2 class="display-2 text-ivory" data-reveal>Everything a car needs, in one showroom.</h2>
+        <h2 class="display-2 text-ivory" data-lines>Everything a car needs, in one showroom.</h2>
         <p class="mt-6 text-base leading-relaxed text-mist" data-reveal>{site.about}</p>
       </div>
       <div class="mt-12 grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-ivory/10 bg-ivory/10 sm:grid-cols-2 lg:grid-cols-3">
@@ -164,7 +146,7 @@ const heroImg = '/images/cars/2024-ferrari-roma2028-ferrari-warranty-and-service
       <div class="grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:gap-20">
         <div>
           <p class="eyebrow mb-5" data-reveal>{letsTalk.title}</p>
-          <h2 class="display-2 text-ivory" data-reveal>{letsTalk.body}</h2>
+          <h2 class="display-2 text-ivory" data-lines>{letsTalk.body}</h2>
           <div class="mt-9 flex flex-col gap-3 sm:flex-row" data-reveal>
             <a href="/sell-your-car" class="btn-gold px-8 py-4"><Tag class="h-4 w-4" /> Sell your car</a>
             <a href="/our-cars" class="btn-primary px-8 py-4">Browse the showroom <ArrowRight class="h-4 w-4" /></a>

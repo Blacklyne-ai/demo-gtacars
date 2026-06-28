@@ -101,36 +101,71 @@ const ldJson = {
 
     <script>
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const fxEls = Array.from(document.querySelectorAll('[data-reveal],[data-slide]')) as HTMLElement[];
-      const showAllFx = () => fxEls.forEach((el) => { el.style.opacity = '1'; el.style.transform = 'none'; });
+      const fxEls = Array.from(document.querySelectorAll('[data-reveal],[data-slide],[data-lines]')) as HTMLElement[];
+      const showAllFx = () => fxEls.forEach((el) => { el.style.opacity = '1'; el.style.transform = 'none'; el.style.clipPath = 'none'; });
+
+      // Finalize cinematic elements (reduced-motion / GSAP-failed failsafe)
+      const finalize = () => {
+        document.querySelectorAll('[data-counter]').forEach((el) => {
+          (el as HTMLElement).textContent = Number((el as HTMLElement).dataset.to || 0).toLocaleString('en-US');
+        });
+        document.querySelectorAll('[data-lines],[data-hero-h1],[data-hero-fade]').forEach((el) => {
+          const s = (el as HTMLElement).style; s.clipPath = 'none'; s.transform = 'none'; s.opacity = '1';
+        });
+      };
 
       // ── Reveals & side-slides via IntersectionObserver ──
       if (reduce || !('IntersectionObserver' in window)) {
         showAllFx();
+        finalize();
       } else {
         const io = new IntersectionObserver((entries) => {
           entries.forEach((e) => {
             if (!e.isIntersecting) return;
             const el = e.target as HTMLElement;
             const d = Number(el.dataset.delay || 0);
-            el.style.transition = `opacity 1.1s cubic-bezier(.22,1,.36,1) ${d}ms, transform 1.25s cubic-bezier(.22,1,.36,1) ${d}ms`;
+            const isLines = el.hasAttribute('data-lines');
+            el.style.transition = `opacity 1.1s cubic-bezier(.22,1,.36,1) ${d}ms, transform 1.25s cubic-bezier(.22,1,.36,1) ${d}ms, clip-path 1.25s cubic-bezier(.22,1,.36,1) ${d}ms`;
             el.style.opacity = '1';
             el.style.transform = 'none';
+            if (isLines) el.style.clipPath = 'inset(0 0 -2% 0)';
             io.unobserve(el);
           });
         }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
         fxEls.forEach((el) => io.observe(el));
         setTimeout(() => fxEls.forEach((el) => {
-          if (parseFloat(getComputedStyle(el).opacity) < 0.1) {
-            el.style.transition = 'opacity 1s ease, transform 1s ease';
-            el.style.opacity = '1'; el.style.transform = 'none';
+          if (parseFloat(getComputedStyle(el).opacity) < 0.1 || getComputedStyle(el).clipPath.indexOf('inset') === 0) {
+            el.style.transition = 'opacity 1s ease, transform 1s ease, clip-path 1s ease';
+            el.style.opacity = '1'; el.style.transform = 'none'; el.style.clipPath = 'none';
           }
-        }), 1600);
+        }), 1800);
+
+        // Count-up — self-contained rAF (independent of the GSAP/Lenis ticker)
+        const counters = Array.from(document.querySelectorAll('[data-counter]')) as HTMLElement[];
+        if (counters.length) {
+          const cio = new IntersectionObserver((ents) => {
+            ents.forEach((e) => {
+              if (!e.isIntersecting) return;
+              const el = e.target as HTMLElement; cio.unobserve(el);
+              const to = Number(el.dataset.to || 0); const dur = 1700; const t0 = performance.now();
+              const tick = (now: number) => {
+                const p = Math.min(1, (now - t0) / dur);
+                el.textContent = Math.round((1 - Math.pow(1 - p, 3)) * to).toLocaleString('en-US');
+                if (p < 1) requestAnimationFrame(tick);
+              };
+              requestAnimationFrame(tick);
+            });
+          }, { threshold: 0.4 });
+          counters.forEach((c) => cio.observe(c));
+        }
       }
 
-      // ── Lenis smooth scroll + GSAP scrub parallax ──
+      // ── Lenis + GSAP cinematic choreography ──
       if (!reduce) {
+        let booted = false;
+        const failTimer = setTimeout(() => { if (!booted) finalize(); }, 2200);
         Promise.all([import('gsap'), import('gsap/ScrollTrigger'), import('lenis')]).then(([g, s, l]: any[]) => {
+          booted = true; clearTimeout(failTimer);
           const gsap = g.default ?? g.gsap;
           const ScrollTrigger = s.ScrollTrigger ?? s.default;
           const Lenis = l.default;
@@ -141,17 +176,42 @@ const ldJson = {
           gsap.ticker.add((t: number) => lenis.raf(t * 1000));
           gsap.ticker.lagSmoothing(0);
 
+          // Background-media parallax
           gsap.utils.toArray('[data-parallax]').forEach((el: any) => {
             const sect = el.closest('section') || el.parentElement || el;
-            gsap.fromTo(el, { yPercent: -9, scale: 1.34 }, {
-              yPercent: 9, scale: 1.16, ease: 'none',
+            gsap.fromTo(el, { yPercent: -9, scale: 1.3 }, {
+              yPercent: 9, scale: 1.14, ease: 'none',
               scrollTrigger: { trigger: sect, start: 'top bottom', end: 'bottom top', scrub: 1 },
             });
           });
 
+          // (Hero intro = CSS; headline wipes + counters = IO/rAF above — all
+          //  ticker-independent. GSAP is used ONLY for scroll-position scrub below.)
+
+          // Desktop-only pins: hero scrub + horizontal fleet
+          const mm = gsap.matchMedia();
+          mm.add('(min-width: 1024px)', () => {
+            const wrap = document.querySelector('[data-hero-wrap]');
+            if (wrap) {
+              gsap.timeline({ scrollTrigger: { trigger: wrap, start: 'top top', end: 'bottom bottom', scrub: 1 } })
+                .to('[data-hero-img]', { scale: 1.22, ease: 'none' }, 0)
+                .fromTo('[data-hero-line]', { scaleY: 0 }, { scaleY: 1, ease: 'none' }, 0)
+                .to('[data-hero-content]', { yPercent: -16, opacity: 0.12, ease: 'none' }, 0.4);
+            }
+            const track: any = document.querySelector('[data-hfleet-track]');
+            const sect = document.querySelector('[data-hfleet]');
+            let tween: any;
+            if (track && sect) {
+              const dist = () => Math.max(0, track.scrollWidth - window.innerWidth + 56);
+              tween = gsap.to(track, { x: () => -dist(), ease: 'none',
+                scrollTrigger: { trigger: sect, start: 'top top', end: () => '+=' + dist(), scrub: 1, pin: true, anticipatePin: 1, invalidateOnRefresh: true } });
+            }
+            return () => { if (tween && tween.scrollTrigger) tween.scrollTrigger.kill(); };
+          });
+
           ScrollTrigger.refresh();
           window.addEventListener('load', () => ScrollTrigger.refresh());
-        }).catch(() => {});
+        }).catch(() => { finalize(); });
       }
 
       // ── Wishlist (localStorage, global) ──

@@ -47,7 +47,7 @@ import { Check, MessageCircle, Phone, ArrowRight } from '@lucide/astro';
     <div class="lux-wide">
       <div class="max-w-2xl">
         <p class="eyebrow mb-4" data-reveal>What’s the process?</p>
-        <h2 class="display-2 text-ivory" data-reveal>From your driveway to paid, in four steps.</h2>
+        <h2 class="display-2 text-ivory" data-lines>From your driveway to paid, in four steps.</h2>
       </div>
       <div class="mt-14 grid gap-px overflow-hidden rounded-2xl border border-ivory/10 bg-ivory/10 sm:grid-cols-2 lg:grid-cols-4">
         {sell.process.map((step, i) => (
@@ -65,7 +65,7 @@ import { Check, MessageCircle, Phone, ArrowRight } from '@lucide/astro';
     <div class="lux-wide grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
       <div>
         <p class="eyebrow mb-4" data-reveal>Why GTA Cars</p>
-        <h2 class="display-2 text-ivory" data-reveal>Reputation, not pressure.</h2>
+        <h2 class="display-2 text-ivory" data-lines>Reputation, not pressure.</h2>
         <p class="mt-6 text-base leading-relaxed text-mist" data-reveal>You are under no obligation. Selling your car to us is completely free and entirely up to you.</p>
       </div>
       <ul class="grid gap-x-10 gap-y-5 sm:grid-cols-2">
@@ -82,7 +82,7 @@ import { Check, MessageCircle, Phone, ArrowRight } from '@lucide/astro';
   <section class="border-t border-ivory/10 bg-coal py-24 text-center sm:py-32">
     <div class="lux-narrow">
       <p class="eyebrow mb-5" data-reveal>{sell.closer}</p>
-      <h2 class="display-2 text-ivory" data-reveal>{sell.closerSub}</h2>
+      <h2 class="display-2 text-ivory" data-lines>{sell.closerSub}</h2>
       <div class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row" data-reveal>
         <a href="#" onclick="document.querySelector('[data-leadform]')?.scrollIntoView({behavior:'smooth'});return false;" class="btn-gold px-8 py-4">Sell your car now <ArrowRight class="h-4 w-4" /></a>
         <a href={contact.whatsapp} target="_blank" rel="noopener" class="btn-primary px-8 py-4"><MessageCircle class="h-4 w-4" /> WhatsApp</a>

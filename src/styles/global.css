@@ -33,6 +33,10 @@
   --nav-h: 84px;
 }
 
+/* Hero intro — CSS-driven (independent of the GSAP/Lenis ticker → bulletproof) */
+@keyframes heroRise { from { transform: translateY(116%); } to { transform: translateY(0); } }
+@keyframes heroFade { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
 /* DARK cinematic bands — remap the same tokens to a deep, warm-black scheme */
 .band-dark {
   --rgb-ink: 12 12 13;          /* #0C0C0D */
@@ -152,7 +156,18 @@
   .js [data-reveal] { transform: translateY(28px); }
   .js [data-slide="left"] { transform: translateX(-44px); }
   .js [data-slide="right"] { transform: translateX(44px); }
-  @media (prefers-reduced-motion: reduce) { .js [data-reveal], .js [data-slide] { opacity: 1 !important; transform: none !important; } }
+
+  /* Cinematic headline wipe (clip-path rise) — no DOM splitting, no flash */
+  .js [data-lines] { clip-path: inset(0 0 102% 0); transform: translateY(18px); will-change: clip-path, transform; }
+
+  /* Hero intro — CSS keyframes (ticker-independent). `both` keeps the end state. */
+  .js [data-hero-h1] { transform: translateY(116%); animation: heroRise 1.05s cubic-bezier(.16,1,.3,1) .08s both; }
+  .js .h1-line-2 [data-hero-h1] { animation-delay: .22s; }
+  .js [data-hero-fade] { opacity: 0; animation: heroFade .85s cubic-bezier(.22,1,.36,1) .42s both; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .js [data-reveal], .js [data-slide], .js [data-lines], .js [data-hero-h1], .js [data-hero-fade] { opacity: 1 !important; transform: none !important; clip-path: none !important; animation: none !important; }
+  }
 
   .price-aed { font-variant-numeric: tabular-nums; letter-spacing: 0; }
   [data-wish].is-saved { color: rgb(var(--rgb-gold-deep)); }

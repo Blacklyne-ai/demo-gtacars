@@ -1,0 +1,42 @@
+---
+import CarCard from './CarCard.astro';
+import { ArrowRight } from '@lucide/astro';
+import type { Car } from '../lib/cars';
+interface Props { cars: Car[] }
+const { cars } = Astro.props;
+---
+<!-- Signature horizontal showcase. Desktop: the section pins and the track scrolls
+     sideways as you scroll down (GSAP, set up in Layout). Mobile: a swipe carousel.
+     ★ Mobile rule preserved — one card visible at a time, full width. -->
+<section data-hfleet class="band-dark relative overflow-hidden">
+  <div data-hfleet-pin class="flex min-h-[60vh] flex-col justify-center py-16 sm:py-20 lg:min-h-screen lg:py-0">
+    <div class="lux-wide flex items-end justify-between gap-6 pb-8 lg:pb-10">
+      <div class="max-w-xl">
+        <p class="eyebrow mb-4" data-reveal>In the showroom</p>
+        <h2 class="display-2 text-ivory" data-lines>Cars worth the drive over.</h2>
+      </div>
+      <a href="/our-cars" class="link-arrow hidden shrink-0 sm:inline-flex" data-reveal>View all stock <ArrowRight class="h-4 w-4" /></a>
+    </div>
+
+    <!-- Track -->
+    <div data-hfleet-scroller class="no-scrollbar overflow-x-auto lg:overflow-visible">
+      <div data-hfleet-track class="flex gap-5 px-5 sm:gap-6 sm:px-10 lg:px-14">
+        {cars.map((car, i) => (
+          <div class="w-[80vw] max-w-[340px] shrink-0 snap-center sm:w-[340px]">
+            <CarCard car={car} eager={i < 3} />
+          </div>
+        ))}
+        <div class="hidden shrink-0 items-center pr-14 lg:flex">
+          <a href="/our-cars" class="group flex h-full min-w-[220px] flex-col items-start justify-center gap-4 rounded-2xl border border-ivory/15 bg-graphite/40 p-8 transition-colors hover:border-gold/40">
+            <span class="font-display text-2xl font-semibold text-ivory">Browse all<br />79 cars</span>
+            <span class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-gold text-[rgb(20,17,8)] transition-transform group-hover:translate-x-1"><ArrowRight class="h-5 w-5" /></span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="lux-wide mt-10 flex justify-center lg:hidden">
+      <a href="/our-cars" class="btn-dark px-8 py-3.5 text-sm">Browse the full showroom <ArrowRight class="h-4 w-4" /></a>
+    </div>
+  </div>
+</section>
