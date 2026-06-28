@@ -1,138 +1,123 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
-import BrandStrip from '../components/BrandStrip.astro';
 import StatsBand from '../components/StatsBand.astro';
-import HorizontalFleet from '../components/HorizontalFleet.astro';
+import CarCard from '../components/CarCard.astro';
 import LeadForm from '../components/LeadForm.astro';
 import SpecialistCards from '../components/SpecialistCards.astro';
 import { getCars, liveCars } from '../lib/cars';
-import { sell, services, contact, letsTalk, site } from '../data/site';
-import { ArrowRight, Check, MessageCircle, Phone, Mail, Clock, Car, Tag, Handshake, ArrowLeftRight, Landmark, ClipboardCheck } from '@lucide/astro';
-const icons = { Car, Tag, Handshake, ArrowLeftRight, Landmark, ClipboardCheck };
+import { sell, services, contact, site } from '../data/site';
+import { ArrowRight, ArrowUpRight, Check, MessageCircle, Phone, Mail, Clock, MapPin, Car, Tag, Handshake, ArrowLeftRight, Landmark, ClipboardCheck } from '@lucide/astro';
+const icons: any = { Car, Tag, Handshake, ArrowLeftRight, Landmark, ClipboardCheck };
 
 const all = await getCars();
 const live = liveCars(all);
-// Showcase set for the horizontal fleet — one premium car per brand, by price (variety + travel)
-const showcase = [...live].sort((a, b) => (b.priceAed ?? 0) - (a.priceAed ?? 0))
+// Curated, one premium car per brand for an airy 8-up teaser grid
+const fleet = [...live].sort((a, b) => (b.priceAed ?? 0) - (a.priceAed ?? 0))
   .filter((c, i, arr) => arr.findIndex((x) => x.brand === c.brand) === i)
-  .slice(0, 10);
+  .slice(0, 8);
 
-const heroImg = '/images/cars/2024-ferrari-roma2028-ferrari-warranty-and-service-pack-ferrari-service-history-gcc/00.webp';
+const heroImg = '/images/site/dubai-hero.webp';
+const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(contact.mapQuery)}&output=embed`;
 ---
 <Layout>
-  <Hero image={heroImg} alt="Ferrari Roma at the GTA Cars showroom in Dubai" />
-
-  <BrandStrip />
+  <Hero image={heroImg} alt="Dubai skyline at golden hour" />
 
   <!-- ───────────── SELL YOUR CAR (focus) ───────────── -->
-  <section id="sell" class="relative border-b border-ivory/10 bg-coal py-20 sm:py-28">
+  <section id="sell" class="bg-ink py-24 sm:py-32">
     <div class="lux-wide">
-      <div class="grid gap-12 lg:grid-cols-[1fr_1.05fr] lg:items-start lg:gap-20">
-        <!-- Copy + bullets -->
+      <div class="grid gap-14 lg:grid-cols-[1fr_1.05fr] lg:items-start lg:gap-24">
         <div>
-          <p class="eyebrow mb-4" data-reveal>Sell your car</p>
-          <h2 class="display-2 text-ivory" data-lines>{sell.heroTitle}</h2>
-          <p class="mt-6 max-w-xl text-base leading-relaxed text-mist" data-reveal>{sell.heroBody}</p>
-
-          <ul class="mt-8 grid gap-3 sm:grid-cols-2">
+          <p class="eyebrow mb-5" data-reveal>We buy any car</p>
+          <h2 class="display-2 text-ivory" data-lines>Sell your car today.</h2>
+          <p class="mt-7 max-w-xl text-lg leading-relaxed text-mist" data-reveal>{sell.heroBody}</p>
+          <ul class="mt-10 grid gap-x-8 gap-y-4 sm:grid-cols-2">
             {sell.bullets.map((b, i) => (
-              <li class="flex items-start gap-3 text-sm text-ivory/90" data-reveal data-delay={i * 60}>
-                <span class="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gold/15 text-gold-deep"><Check class="h-3 w-3" /></span>
-                {b}
+              <li class="flex items-start gap-3 text-[0.95rem] text-ivory/90" data-reveal data-delay={i * 60}>
+                <span class="mt-1 inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-gold/15 text-gold-deep"><Check class="h-2.5 w-2.5" /></span>{b}
               </li>
             ))}
           </ul>
         </div>
-
-        <!-- Form -->
-        <div data-slide="right">
-          <div class="card p-6 shadow-lift sm:p-8">
-            <h3 class="font-display text-xl font-semibold text-ivory">Get your free valuation</h3>
-            <p class="mt-1.5 text-sm text-mist">No obligation. No hidden fees. We buy any car.</p>
-            <div class="mt-6">
-              <LeadForm fields={sell.formFields} submitLabel="Get my offer" formName="sell-home" />
-            </div>
+        <div data-reveal>
+          <div class="rounded-3xl border border-ivory/10 bg-graphite p-7 shadow-lift sm:p-9">
+            <h3 class="font-display text-2xl font-medium text-ivory">Get your free valuation</h3>
+            <p class="mt-2 text-sm text-mist">No obligation. No hidden fees. We buy any car.</p>
+            <div class="mt-7"><LeadForm fields={sell.formFields} submitLabel="Get my offer" formName="sell-home" /></div>
           </div>
         </div>
       </div>
 
-      <!-- Specialists — full width, never cramped -->
-      <div class="mt-14 border-t border-ivory/10 pt-12">
-        <p class="text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-faint" data-reveal>Or contact our car buying specialists</p>
-        <div class="mt-6">
-          <SpecialistCards cols={3} />
-        </div>
+      <div class="mt-16 border-t border-ivory/10 pt-12">
+        <p class="eyebrow mb-6" data-reveal>Or speak to our car-buying specialists</p>
+        <SpecialistCards cols={3} />
       </div>
     </div>
   </section>
 
+  <!-- ───────────── FLEET — Pick your car ───────────── -->
+  <section id="fleet" class="border-t border-ivory/10 bg-coal py-24 sm:py-32">
+    <div class="lux-wide">
+      <div class="flex flex-wrap items-end justify-between gap-6">
+        <div class="max-w-xl">
+          <p class="eyebrow mb-5" data-reveal>The showroom</p>
+          <h2 class="display-2 text-ivory" data-lines>Find your next car.</h2>
+        </div>
+        <a href="/our-cars" class="link-arrow" data-reveal>All {live.length} cars <ArrowRight class="h-4 w-4" /></a>
+      </div>
+
+      <!-- ★ Mobile: one car per row -->
+      <div class="mt-14 grid grid-cols-1 gap-x-7 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {fleet.map((car, i) => <CarCard car={car} eager={i < 4} />)}
+      </div>
+
+      <div class="mt-16 flex justify-center" data-reveal>
+        <a href="/our-cars" class="btn-dark px-9 py-4 text-sm">Browse the full showroom <ArrowUpRight class="h-4 w-4" /></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── CINEMATIC STATS BAND ───────────── -->
+  <StatsBand />
+
   <!-- ───────────── PROCESS ───────────── -->
-  <section class="bg-ink py-20 sm:py-28">
+  <section class="bg-ink py-24 sm:py-32">
     <div class="lux-wide">
       <div class="max-w-2xl">
-        <p class="eyebrow mb-4" data-reveal>What’s the process?</p>
+        <p class="eyebrow mb-5" data-reveal>How selling works</p>
         <h2 class="display-2 text-ivory" data-lines>From your driveway to paid, in four steps.</h2>
       </div>
-      <div class="mt-14 grid gap-px overflow-hidden rounded-2xl border border-ivory/10 bg-ivory/10 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="mt-16 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
         {sell.process.map((step, i) => (
-          <div class="flex flex-col bg-graphite p-7" data-reveal data-delay={i * 70}>
-            <span class="price-aed font-display text-3xl font-bold text-gold-deep">{String(i + 1).padStart(2, '0')}</span>
-            <p class="mt-5 text-sm leading-relaxed text-ivory/85">{step}</p>
+          <div class="relative" data-reveal data-delay={i * 70}>
+            <span class="font-display text-5xl font-normal text-gold/70">{String(i + 1).padStart(2, '0')}</span>
+            <div class="mt-4 h-px w-10 bg-gold/40"></div>
+            <p class="mt-5 text-[0.95rem] leading-relaxed text-mist">{step}</p>
           </div>
         ))}
       </div>
     </div>
   </section>
 
-  <!-- ───────────── WHY GTA ───────────── -->
-  <section class="border-y border-ivory/10 bg-coal py-20 sm:py-28">
-    <div class="lux-wide">
-      <div class="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
-        <div>
-          <p class="eyebrow mb-4" data-reveal>Why GTA Cars</p>
-          <h2 class="display-2 text-ivory" data-lines>Reputation, not pressure.</h2>
-          <p class="mt-6 text-base leading-relaxed text-mist" data-reveal>{sell.closer} — handled professionally, end to end.</p>
-          <div class="mt-8 flex flex-col gap-3 sm:flex-row" data-reveal>
-            <a href={contact.whatsapp} target="_blank" rel="noopener" class="btn-gold px-7 py-3.5"><MessageCircle class="h-4 w-4" /> {sell.closerSub.includes('?') ? 'Sell your car now' : 'WhatsApp us'}</a>
-            <a href={contact.phonePrimaryHref} class="btn-primary px-7 py-3.5"><Phone class="h-4 w-4" /> {contact.phonePrimary}</a>
-          </div>
-        </div>
-        <ul class="grid gap-x-10 gap-y-5 sm:grid-cols-2">
-          {sell.why.map((w, i) => (
-            <li class="flex items-start gap-3 text-sm leading-relaxed text-ivory/85" data-reveal data-delay={i * 40}>
-              <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold"></span>{w}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <StatsBand />
-
-  <!-- ───────────── BUY / FEATURED STOCK (horizontal scrub showcase) ───────────── -->
-  <HorizontalFleet cars={showcase} />
-
   <!-- ───────────── SERVICES ───────────── -->
-  <section class="border-t border-ivory/10 bg-coal py-20 sm:py-28">
+  <section class="border-t border-ivory/10 bg-coal py-24 sm:py-32">
     <div class="lux-wide">
       <div class="max-w-2xl">
-        <p class="eyebrow mb-4" data-reveal>Under one roof</p>
-        <h2 class="display-2 text-ivory" data-lines>Everything a car needs, in one showroom.</h2>
+        <p class="eyebrow mb-5" data-reveal>Everything under one roof</p>
+        <h2 class="display-2 text-ivory" data-lines>One showroom, every step handled.</h2>
         <p class="mt-6 text-base leading-relaxed text-mist" data-reveal>{site.about}</p>
       </div>
-      <div class="mt-12 grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-ivory/10 bg-ivory/10 sm:grid-cols-2 lg:grid-cols-3">
+      <div class="mt-14 grid gap-px overflow-hidden rounded-3xl border border-ivory/10 bg-ivory/10 sm:grid-cols-2 lg:grid-cols-3">
         {services.map((s, i) => {
-          const Icon = (icons as any)[s.icon];
+          const Icon = icons[s.icon];
           return (
-            <a href={s.href} class="group flex flex-col gap-4 bg-graphite p-7 transition-colors hover:bg-steel/60" data-reveal data-delay={i * 50}>
-              <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gold/12 text-gold"><Icon class="h-5 w-5" /></span>
+            <a href={s.href} class="group flex flex-col gap-5 bg-ink p-8 transition-colors hover:bg-graphite" data-reveal data-delay={i * 50}>
+              <span class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-gold/12 text-gold-deep"><Icon class="h-5 w-5" /></span>
               <div>
-                <h3 class="font-display text-lg font-semibold text-ivory">{s.title}</h3>
-                <p class="mt-2 text-sm leading-relaxed text-mist">{s.body}</p>
+                <h3 class="font-display text-xl font-medium text-ivory">{s.title}</h3>
+                <p class="mt-2.5 text-sm leading-relaxed text-mist">{s.body}</p>
               </div>
-              <span class="mt-auto inline-flex items-center gap-1.5 text-[0.72rem] font-medium uppercase tracking-[0.14em] text-gold opacity-0 transition-opacity group-hover:opacity-100">Learn more <ArrowRight class="h-3.5 w-3.5" /></span>
+              <span class="mt-auto inline-flex items-center gap-1.5 text-[0.7rem] font-medium uppercase tracking-[0.16em] text-gold-deep opacity-0 transition-opacity group-hover:opacity-100">Learn more <ArrowRight class="h-3.5 w-3.5" /></span>
             </a>
           );
         })}
@@ -140,36 +125,35 @@ const heroImg = '/images/cars/2024-ferrari-roma2028-ferrari-warranty-and-service
     </div>
   </section>
 
-  <!-- ───────────── LET'S TALK (contact band) ───────────── -->
-  <section class="relative overflow-hidden bg-ink py-24 sm:py-32">
-    <div class="lux-wide">
-      <div class="grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:gap-20">
-        <div>
-          <p class="eyebrow mb-5" data-reveal>{letsTalk.title}</p>
-          <h2 class="display-2 text-ivory" data-lines>{letsTalk.body}</h2>
-          <div class="mt-9 flex flex-col gap-3 sm:flex-row" data-reveal>
-            <a href="/sell-your-car" class="btn-gold px-8 py-4"><Tag class="h-4 w-4" /> Sell your car</a>
-            <a href="/our-cars" class="btn-primary px-8 py-4">Browse the showroom <ArrowRight class="h-4 w-4" /></a>
+  <!-- ───────────── LET'S TALK + MAP ───────────── -->
+  <section class="bg-ink py-24 sm:py-32">
+    <div class="lux-wide grid gap-14 lg:grid-cols-[1fr_1.15fr] lg:items-center lg:gap-20">
+      <div>
+        <p class="eyebrow mb-5" data-reveal>Let’s talk</p>
+        <h2 class="display-2 text-ivory" data-lines>Ready when you are.</h2>
+        <p class="mt-6 max-w-md text-base leading-relaxed text-mist" data-reveal>One of our experts will be delighted to answer any questions you may have. So please get in touch.</p>
+        <div class="mt-8 grid gap-3 sm:grid-cols-2" data-reveal>
+          <a href={contact.phonePrimaryHref} class="group flex items-center gap-3.5 rounded-2xl border border-ivory/10 bg-graphite p-4 shadow-soft transition-colors hover:border-gold/40">
+            <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gold/12 text-gold-deep"><Phone class="h-5 w-5" /></span>
+            <span><span class="block text-[0.66rem] uppercase tracking-[0.14em] text-faint">Call</span><span class="block text-sm font-medium text-ivory">{contact.phonePrimary}</span></span>
+          </a>
+          <a href={contact.whatsapp} target="_blank" rel="noopener" class="group flex items-center gap-3.5 rounded-2xl border border-ivory/10 bg-graphite p-4 shadow-soft transition-colors hover:border-gold/40">
+            <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gold/12 text-gold-deep"><MessageCircle class="h-5 w-5" /></span>
+            <span><span class="block text-[0.66rem] uppercase tracking-[0.14em] text-faint">WhatsApp</span><span class="block text-sm font-medium text-ivory">{contact.whatsappNumber}</span></span>
+          </a>
+          <a href={contact.emailHref} class="group flex items-center gap-3.5 rounded-2xl border border-ivory/10 bg-graphite p-4 shadow-soft transition-colors hover:border-gold/40">
+            <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gold/12 text-gold-deep"><Mail class="h-5 w-5" /></span>
+            <span><span class="block text-[0.66rem] uppercase tracking-[0.14em] text-faint">Email</span><span class="block text-sm font-medium text-ivory">{contact.email}</span></span>
+          </a>
+          <div class="flex items-center gap-3.5 rounded-2xl border border-ivory/10 bg-graphite p-4 shadow-soft">
+            <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gold/12 text-gold-deep"><Clock class="h-5 w-5" /></span>
+            <span><span class="block text-[0.66rem] uppercase tracking-[0.14em] text-faint">Open</span><span class="block text-sm font-medium text-ivory">{contact.hours}</span></span>
           </div>
         </div>
-        <div class="grid gap-3 sm:grid-cols-2">
-          <a href={contact.phonePrimaryHref} class="card group flex items-center gap-4 p-5 transition-colors hover:border-gold/40" data-reveal>
-            <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gold/12 text-gold"><Phone class="h-5 w-5" /></span>
-            <span><span class="block text-[0.68rem] uppercase tracking-[0.14em] text-faint">Call</span><span class="block text-sm font-semibold text-ivory transition-colors group-hover:text-gold-deep">{contact.phonePrimary}</span></span>
-          </a>
-          <a href={contact.whatsapp} target="_blank" rel="noopener" class="card group flex items-center gap-4 p-5 transition-colors hover:border-gold/40" data-reveal data-delay="60">
-            <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gold/12 text-gold"><MessageCircle class="h-5 w-5" /></span>
-            <span><span class="block text-[0.68rem] uppercase tracking-[0.14em] text-faint">WhatsApp</span><span class="block text-sm font-semibold text-ivory transition-colors group-hover:text-gold-deep">{contact.whatsappNumber}</span></span>
-          </a>
-          <a href={contact.emailHref} class="card group flex items-center gap-4 p-5 transition-colors hover:border-gold/40" data-reveal data-delay="120">
-            <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gold/12 text-gold"><Mail class="h-5 w-5" /></span>
-            <span><span class="block text-[0.68rem] uppercase tracking-[0.14em] text-faint">Email</span><span class="block text-sm font-semibold text-ivory transition-colors group-hover:text-gold-deep">{contact.email}</span></span>
-          </a>
-          <div class="card flex items-center gap-4 p-5" data-reveal data-delay="180">
-            <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gold/12 text-gold"><Clock class="h-5 w-5" /></span>
-            <span><span class="block text-[0.68rem] uppercase tracking-[0.14em] text-faint">Open</span><span class="block text-sm font-semibold text-ivory">{contact.hours}</span></span>
-          </div>
-        </div>
+      </div>
+      <div class="overflow-hidden rounded-3xl border border-ivory/10 shadow-lift" data-reveal>
+        <iframe src={mapSrc} title="GTA Cars — Al Quoz, Dubai" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+          class="h-full min-h-[360px] w-full lg:min-h-[460px]" style="border:0"></iframe>
       </div>
     </div>
   </section>

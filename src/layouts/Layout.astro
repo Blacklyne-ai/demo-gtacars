@@ -56,7 +56,7 @@ const ldJson = {
 
     <!-- Self-hosted fonts (font-display:optional in global.css → CLS≈0) -->
     <link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/sora-700.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/cormorant-500.woff2" as="font" type="font/woff2" crossorigin />
 
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
@@ -185,29 +185,8 @@ const ldJson = {
             });
           });
 
-          // (Hero intro = CSS; headline wipes + counters = IO/rAF above — all
-          //  ticker-independent. GSAP is used ONLY for scroll-position scrub below.)
-
-          // Desktop-only pins: hero scrub + horizontal fleet
-          const mm = gsap.matchMedia();
-          mm.add('(min-width: 1024px)', () => {
-            const wrap = document.querySelector('[data-hero-wrap]');
-            if (wrap) {
-              gsap.timeline({ scrollTrigger: { trigger: wrap, start: 'top top', end: 'bottom bottom', scrub: 1 } })
-                .to('[data-hero-img]', { scale: 1.22, ease: 'none' }, 0)
-                .fromTo('[data-hero-line]', { scaleY: 0 }, { scaleY: 1, ease: 'none' }, 0)
-                .to('[data-hero-content]', { yPercent: -16, opacity: 0.12, ease: 'none' }, 0.4);
-            }
-            const track: any = document.querySelector('[data-hfleet-track]');
-            const sect = document.querySelector('[data-hfleet]');
-            let tween: any;
-            if (track && sect) {
-              const dist = () => Math.max(0, track.scrollWidth - window.innerWidth + 56);
-              tween = gsap.to(track, { x: () => -dist(), ease: 'none',
-                scrollTrigger: { trigger: sect, start: 'top top', end: () => '+=' + dist(), scrub: 1, pin: true, anticipatePin: 1, invalidateOnRefresh: true } });
-            }
-            return () => { if (tween && tween.scrollTrigger) tween.scrollTrigger.kill(); };
-          });
+          // (Hero intro = CSS ken-burns + line-rise; headline wipes + counters =
+          //  IO/rAF above — all ticker-independent. GSAP = parallax scrub only.)
 
           ScrollTrigger.refresh();
           window.addEventListener('load', () => ScrollTrigger.refresh());

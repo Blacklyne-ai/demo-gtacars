@@ -3,7 +3,7 @@ import { Phone, MessageCircle, Mail, Clock, MapPin } from '@lucide/astro';
 import { site, contact, nav, sellMenu } from '../data/site';
 const year = 2026;
 ---
-<footer class="band-dark relative border-t border-ivory/10">
+<footer class="relative border-t border-ivory/10 bg-coal">
   <div class="lux-wide py-16 sm:py-20">
     <div class="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
       <!-- Brand -->
@@ -55,7 +55,7 @@ const year = 2026;
           <label for="nl" class="sr-only">Email for stock updates</label>
           <div class="flex overflow-hidden rounded-full border border-ivory/15 bg-graphite focus-within:border-gold/50">
             <input id="nl" type="email" required placeholder="Email for stock alerts" class="w-full bg-transparent px-4 py-2.5 text-sm text-ivory placeholder:text-faint focus:outline-none" />
-            <button type="submit" class="shrink-0 bg-gold px-4 text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-ink transition-colors hover:bg-gold-lite">Join</button>
+            <button type="submit" class="shrink-0 bg-gold px-4 text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-[rgb(20,17,8)] transition-colors hover:bg-gold-lite">Join</button>
           </div>
           <p data-nl-msg class="mt-2 hidden text-xs text-gold">Thanks — we’ll be in touch. (Demo: not yet connected.)</p>
         </form>

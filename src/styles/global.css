@@ -14,19 +14,20 @@
 @tailwind utilities;
 
 @font-face { font-family: 'Inter Variable'; font-style: normal; font-weight: 100 900; font-display: optional; src: url('/fonts/inter.woff2') format('woff2'); }
-@font-face { font-family: 'Sora'; font-style: normal; font-weight: 600; font-display: optional; src: url('/fonts/sora-600.woff2') format('woff2'); }
-@font-face { font-family: 'Sora'; font-style: normal; font-weight: 700; font-display: optional; src: url('/fonts/sora-700.woff2') format('woff2'); }
+@font-face { font-family: 'Cormorant Garamond'; font-style: normal; font-weight: 400; font-display: optional; src: url('/fonts/cormorant-400.woff2') format('woff2'); }
+@font-face { font-family: 'Cormorant Garamond'; font-style: normal; font-weight: 500; font-display: optional; src: url('/fonts/cormorant-500.woff2') format('woff2'); }
+@font-face { font-family: 'Cormorant Garamond'; font-style: normal; font-weight: 600; font-display: optional; src: url('/fonts/cormorant-600.woff2') format('woff2'); }
 
 :root {
-  /* LIGHT content surfaces */
-  --rgb-ink: 247 245 240;       /* #F7F5F0 warm paper — page ground (token name kept) */
-  --rgb-coal: 240 237 230;      /* #F0EDE6 bone — alternating section */
+  /* LIGHT editorial-luxury surfaces (warm white, like the reference) */
+  --rgb-ink: 250 248 243;       /* #FAF8F3 warm paper — page ground */
+  --rgb-coal: 243 239 231;      /* #F3EFE7 bone — alternating section */
   --rgb-graphite: 255 255 255;  /* #FFFFFF card / panel surface */
-  --rgb-steel: 232 228 219;     /* #E8E4DB raised / fill / soft border */
-  --rgb-ivory: 26 23 18;        /* #1A1712 PRIMARY text / dark hairlines */
-  --rgb-mist: 90 86 78;         /* #5A564E secondary text */
-  --rgb-faint: 110 104 96;      /* #6E6860 faint label / tertiary (AA-safe on white) */
-  --rgb-line: 26 23 18;         /* hairline base (used at low alpha) */
+  --rgb-steel: 232 226 215;     /* #E8E2D7 raised / fill / soft border */
+  --rgb-ivory: 26 24 21;        /* #1A1815 PRIMARY text / dark hairlines */
+  --rgb-mist: 92 87 78;         /* #5C574E secondary text */
+  --rgb-faint: 112 106 97;      /* #706A61 faint label / tertiary (AA-safe) */
+  --rgb-line: 26 24 21;         /* hairline base (used at low alpha) */
   --rgb-gold: 163 144 48;       /* #A39030 brass accent — backgrounds / large numbers / icons */
   --rgb-gold-lite: 198 178 92;  /* #C6B25C highlight / shimmer */
   --rgb-gold-deep: 114 100 30;  /* #72641E deep gold — small gold TEXT on light (AA-safe) */
@@ -71,8 +72,8 @@
     overflow-x: clip;
   }
   h1, h2, h3, .font-display {
-    font-family: 'Sora', Inter, system-ui, sans-serif;
-    font-weight: 600; letter-spacing: -0.02em; line-height: 1.05;
+    font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    font-weight: 500; letter-spacing: -0.012em; line-height: 1.04;
   }
   h4 { font-family: 'Inter Variable', Inter, sans-serif; font-weight: 600; letter-spacing: -0.01em; }
   ::selection { background: rgb(var(--rgb-gold) / 0.28); color: rgb(var(--rgb-ivory)); }
@@ -91,9 +92,9 @@
 
   .eyebrow { @apply inline-block text-[0.7rem] font-semibold uppercase tracking-[0.3em] text-gold-deep; }
 
-  .display-1 { @apply font-display text-[clamp(2.6rem,6.4vw,5.4rem)] font-bold leading-[1.02]; }
-  .display-2 { @apply font-display text-[clamp(1.9rem,4vw,3.2rem)] font-semibold leading-[1.07]; }
-  .display-3 { @apply font-display text-[clamp(1.45rem,2.6vw,2.2rem)] font-semibold leading-[1.12]; }
+  .display-1 { @apply font-display text-[clamp(3rem,7.2vw,6.7rem)] font-normal leading-[1.0]; }
+  .display-2 { @apply font-display text-[clamp(2.2rem,4.6vw,4.1rem)] font-medium leading-[1.05]; }
+  .display-3 { @apply font-display text-[clamp(1.7rem,3vw,2.7rem)] font-medium leading-[1.1]; }
 
   /* Buttons */
   .btn { @apply inline-flex items-center justify-center gap-2 text-[0.82rem] font-medium leading-none transition-all duration-500 ease-luxe; }

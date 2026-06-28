@@ -27,7 +27,7 @@ export default {
       },
       fontFamily: {
         sans: ['"Inter Variable"', 'Inter', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
-        display: ['"Sora"', 'Inter', 'system-ui', 'sans-serif'],
+        display: ['"Cormorant Garamond"', 'Georgia', 'Times New Roman', 'serif'],
       },
       letterSpacing: {
         tightish: '-0.015em',
