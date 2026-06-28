@@ -5,7 +5,7 @@ import { contact } from '../data/site';
 interface Props { image: string; alt: string }
 const { image, alt } = Astro.props;
 ---
-<section class="grain relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden bg-ink">
+<section class="band-dark grain relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden">
   <!-- Cinematic darkened car still -->
   <div class="absolute inset-0 -z-10">
     <img src={image} alt={alt} width="1400" height="1000" fetchpriority="high" decoding="async"

@@ -19,21 +19,38 @@ The logo is gold-on-transparent → sits directly on the dark canvas. **Logo
 pixel-analysis has priority** and confirmed the dark+brass direction the old
 site already used.
 
-## Palette (cinematic dark)
+## Palette — LAYERED (light content + dark cinematic bands)
+
+The real gtacars.ae is light content (inventory/services) with dark hero/footer
+bands. We mirror that: **warm-light surfaces** for content, **dark cinematic
+image bands** for hero / stats / CTA / footer. One brass-gold accent throughout.
+
+**Light surfaces (default `:root`)**
 
 | Token | Hex | Use |
 |---|---|---|
-| `ink` | `#0A0A0B` | page ground |
-| `coal` | `#121214` | alternating section |
-| `graphite` | `#18181B` | cards / panels |
-| `steel` | `#232327` | raised / fill / borders |
-| `ivory` | `#F4F2EC` | primary text |
-| `mist` | `#B4AFA4` | secondary text |
-| `faint` | `#7C786F` | faint labels |
-| `gold` | `#C2AE4A` | accent — used **sparingly** (AED prices, CTAs, hairlines) |
+| `ink` | `#F7F5F0` | warm paper — page ground |
+| `coal` | `#F0EDE6` | bone — alternating section |
+| `graphite` | `#FFFFFF` | cards / panels |
+| `steel` | `#E8E4DB` | raised / fill / soft border |
+| `ivory` | `#1A1712` | PRIMARY text / hairlines |
+| `mist` | `#5A564E` | secondary text |
+| `faint` | `#6E6860` | faint labels (AA-safe) |
+| `gold` | `#A39030` | brass — **backgrounds, large numbers, icons** |
+| `gold-deep` | `#72641E` | **small gold TEXT on light** (AA-safe) |
 
-Source of truth: `src/styles/global.css :root` (RGB triplets for Tailwind
-alpha). Tokens map in `tailwind.config.mjs`.
+**Dark bands** — wrap any section in **`.band-dark`**, which locally remaps the
+same tokens to a deep warm-black scheme (`ink #0C0C0D`, `ivory #F4F2EC`, brighter
+`gold #C6B25C`). Because every component is token-based, it themes itself
+correctly with no per-context markup. Used by: Hero, StatsBand, the /our-cars
+hero band, Footer.
+
+Source of truth: `src/styles/global.css :root` + `.band-dark`. Tokens map in
+`tailwind.config.mjs`.
+
+**Accessibility rule:** brass `gold` is for fills / large display numbers /
+icons only; use `gold-deep` for any small gold text on light. All pages pass
+Lighthouse a11y (contrast AA).
 
 ## Type
 

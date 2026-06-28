@@ -7,41 +7,55 @@ import { Search, X, SlidersHorizontal } from '@lucide/astro';
 const all = await getCars();
 const live = liveCars(all);
 const brands = activeBrands(live);
-const bodies = [...bodyCounts(live).entries()].filter(([b]) => b !== 'Other').sort((a, b) => b[1] - a[1]).map(([b]) => b);
+const bodyMap = bodyCounts(live);
+const bodies = [...bodyMap.entries()].filter(([b]) => b !== 'Other').sort((a, b) => b[1] - a[1]).map(([b]) => b);
 const prices = live.map((c) => c.priceAed ?? 0).filter(Boolean);
 const maxP = Math.max(...prices);
 const priceBrackets = [50000, 100000, 150000, 200000, 300000, 500000, 750000, 1000000];
+const heroImg = '/images/cars/2024-lamborghini-urus-s-1-year-warranty-excellent-condition-clean-title/00.webp';
 ---
 <Layout title="Our Cars — GTA Cars Dubai pre-owned showroom" description="Browse quality pre-owned cars at GTA Cars Dubai — SUVs, coupes, sedans and supercars. Real AED prices, full specs, finance and part-exchange available.">
-  <!-- Header band -->
-  <section class="border-b border-ivory/10 bg-coal pb-10 pt-[calc(var(--nav-h)+3rem)]">
-    <div class="lux-wide">
-      <p class="eyebrow mb-4">The showroom</p>
-      <h1 class="display-2 text-ivory">Our cars</h1>
-      <p class="mt-4 max-w-2xl text-base leading-relaxed text-mist">
+  <!-- Cinematic hero band -->
+  <section class="band-dark grain relative isolate overflow-hidden">
+    <div class="absolute inset-0 -z-10">
+      <img src={heroImg} alt="" aria-hidden="true" width="1400" height="800" fetchpriority="high" decoding="async"
+        class="h-full w-full object-cover object-[65%_center] [filter:brightness(0.5)_saturate(0.9)]" />
+      <div class="absolute inset-0 bg-gradient-to-r from-ink via-ink/80 to-ink/30"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-ink/60"></div>
+    </div>
+    <div class="lux-wide pb-12 pt-[calc(var(--nav-h)+3.5rem)]">
+      <p class="eyebrow mb-4 text-shadow-cine">The showroom</p>
+      <h1 class="display-1 text-ivory text-shadow-cine">Our cars</h1>
+      <p class="mt-5 max-w-2xl text-base leading-relaxed text-ivory/80 text-shadow-cine">
         Quality pre-owned cars, inspected and ready to drive. Real prices in AED, full
         specifications, with finance and part-exchange available on every vehicle.
       </p>
     </div>
   </section>
 
-  <!-- Sticky filter bar -->
-  <div data-filterbar class="sticky top-[calc(var(--nav-h)-1.25rem)] z-30 border-b border-ivory/10 bg-ink/85 py-4 backdrop-blur-xl">
+  <!-- Sticky filter -->
+  <div data-filterbar class="sticky top-[calc(var(--nav-h)-1.25rem)] z-30 border-b border-ivory/10 bg-ink/90 py-4 backdrop-blur-xl">
     <div class="lux-wide">
-      <div class="flex flex-col gap-3 lg:flex-row lg:items-center">
+      <!-- Category pill row -->
+      <div class="no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
+        <button data-pill data-val="" class="cat-pill is-on">All cars <span class="font-normal">{live.length}</span></button>
+        {bodies.map((b) => (
+          <button data-pill data-val={b} class="cat-pill">{b} <span class="font-normal">{bodyMap.get(b)}</span></button>
+        ))}
+      </div>
+
+      <!-- Controls -->
+      <div class="mt-3 flex flex-col gap-2.5 lg:flex-row lg:items-center">
         <label class="relative flex-1">
           <Search class="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-faint" />
           <input data-f="search" type="search" placeholder="Search make or model…" aria-label="Search cars"
             class="w-full rounded-full border border-ivory/15 bg-graphite py-3 pl-11 pr-4 text-sm text-ivory placeholder:text-faint focus:border-gold/50 focus:outline-none" />
         </label>
-        <div class="grid grid-cols-2 gap-2.5 sm:grid-cols-4 lg:flex lg:gap-2.5">
-          <select data-f="brand" aria-label="Brand" class="select-dark rounded-full border border-ivory/15 bg-graphite px-4 py-3 text-sm text-ivory focus:border-gold/50 focus:outline-none">
+        <input type="hidden" data-f="body" value="" />
+        <div class="grid grid-cols-1 gap-2.5 sm:grid-cols-3 lg:flex">
+          <select data-f="brand" aria-label="Make" class="select-dark rounded-full border border-ivory/15 bg-graphite px-4 py-3 text-sm text-ivory focus:border-gold/50 focus:outline-none">
             <option value="">All makes</option>
             {brands.map((b) => <option value={b}>{b}</option>)}
-          </select>
-          <select data-f="body" aria-label="Body type" class="select-dark rounded-full border border-ivory/15 bg-graphite px-4 py-3 text-sm text-ivory focus:border-gold/50 focus:outline-none">
-            <option value="">All bodies</option>
-            {bodies.map((b) => <option value={b}>{b}</option>)}
           </select>
           <select data-f="maxprice" aria-label="Max price" class="select-dark rounded-full border border-ivory/15 bg-graphite px-4 py-3 text-sm text-ivory focus:border-gold/50 focus:outline-none">
             <option value="">Any price</option>
@@ -60,7 +74,7 @@ const priceBrackets = [50000, 100000, 150000, 200000, 300000, 500000, 750000, 10
       <div class="mt-3 flex flex-wrap items-center gap-2">
         <p class="mr-1 text-sm text-mist"><span data-count class="font-semibold text-ivory">{live.length}</span> <span data-count-noun>cars</span></p>
         <div data-chips class="flex flex-wrap gap-2"></div>
-        <button data-reset class="ml-auto hidden items-center gap-1.5 rounded-full border border-ivory/15 px-3 py-1.5 text-[0.7rem] font-medium uppercase tracking-[0.12em] text-faint transition-colors hover:border-gold/40 hover:text-gold"><X class="h-3.5 w-3.5" />Clear all</button>
+        <button data-reset class="ml-auto hidden items-center gap-1.5 rounded-full border border-ivory/15 px-3 py-1.5 text-[0.7rem] font-medium uppercase tracking-[0.12em] text-faint transition-colors hover:border-gold/40 hover:text-gold-deep"><X class="h-3.5 w-3.5" />Clear all</button>
       </div>
     </div>
   </div>
@@ -74,9 +88,9 @@ const priceBrackets = [50000, 100000, 150000, 200000, 300000, 500000, 750000, 10
       </div>
 
       <div data-empty class="hidden py-20 text-center">
-        <span class="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full border border-ivory/12 text-gold"><SlidersHorizontal class="h-6 w-6" /></span>
+        <span class="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full border border-ivory/12 text-gold-deep"><SlidersHorizontal class="h-6 w-6" /></span>
         <p class="mt-6 font-display text-2xl text-ivory">No cars match those filters.</p>
-        <p class="mt-3 text-sm text-mist">Try widening your search, or <a href="/contact" class="text-gold underline decoration-gold/40 underline-offset-2">tell us what you’re after</a> — we source to order.</p>
+        <p class="mt-3 text-sm text-mist">Try widening your search, or <a href="/contact" class="text-gold-deep underline decoration-gold/40 underline-offset-2">tell us what you’re after</a> — we source to order.</p>
         <button data-reset class="btn-dark mt-7 px-7 py-3">Clear filters</button>
       </div>
     </div>
@@ -88,9 +102,11 @@ const priceBrackets = [50000, 100000, 150000, 200000, 300000, 500000, 750000, 10
   const grid = document.querySelector('[data-grid]') as HTMLElement;
   const cards = Array.from(document.querySelectorAll('[data-car]')) as HTMLElement[];
   const countEl = document.querySelector('[data-count]') as HTMLElement;
+  const nounEl = document.querySelector('[data-count-noun]') as HTMLElement;
   const emptyEl = document.querySelector('[data-empty]') as HTMLElement;
   const chipsEl = document.querySelector('[data-chips]') as HTMLElement;
   const resetBtns = document.querySelectorAll('[data-reset]');
+  const pills = Array.from(document.querySelectorAll('[data-pill]')) as HTMLElement[];
   const get = (k: string) => bar?.querySelector(`[data-f="${k}"]`) as HTMLInputElement | HTMLSelectElement | null;
   const num = (el: HTMLElement, k: string) => Number(el.dataset[k] || 0);
 
@@ -101,6 +117,11 @@ const priceBrackets = [50000, 100000, 150000, 200000, 300000, 500000, 750000, 10
     maxprice: (v) => `≤ AED ${Number(v).toLocaleString('en-US')}`,
   };
 
+  function syncPills() {
+    const body = get('body')?.value || '';
+    pills.forEach((p) => p.classList.toggle('is-on', (p.dataset.val || '') === body));
+  }
+
   function renderChips() {
     chipsEl.innerHTML = '';
     let any = false;
@@ -110,11 +131,10 @@ const priceBrackets = [50000, 100000, 150000, 200000, 300000, 500000, 750000, 10
       any = true;
       const chip = document.createElement('button');
       chip.className = 'inline-flex items-center gap-1.5 rounded-full border border-gold/35 bg-gold/10 px-3 py-1.5 text-[0.72rem] font-medium text-ivory transition-colors hover:border-gold';
-      chip.innerHTML = `${labels[k](v)} <span class="text-gold">✕</span>`;
+      chip.innerHTML = `${labels[k](v)} <span class="text-gold-deep">✕</span>`;
       chip.addEventListener('click', () => { (el as HTMLInputElement).value = ''; apply(); });
       chipsEl.appendChild(chip);
     });
-    // Only the filter-bar's own "Clear all" button toggles with active state
     (bar?.querySelector('[data-reset]') as HTMLElement)?.classList.toggle('hidden', !any);
   }
 
@@ -148,19 +168,24 @@ const priceBrackets = [50000, 100000, 150000, 200000, 300000, 500000, 750000, 10
     visible.forEach((c) => grid.appendChild(c));
 
     countEl.textContent = String(shown);
-    const noun = document.querySelector('[data-count-noun]');
-    if (noun) noun.textContent = shown === 1 ? 'car' : 'cars';
+    if (nounEl) nounEl.textContent = shown === 1 ? 'car' : 'cars';
     emptyEl.classList.toggle('hidden', shown > 0);
     grid.classList.toggle('hidden', shown === 0);
+    syncPills();
     renderChips();
   }
 
-  bar?.querySelectorAll('[data-f]').forEach((el) => {
+  pills.forEach((p) => p.addEventListener('click', () => {
+    const bodyInput = get('body') as HTMLInputElement;
+    if (bodyInput) bodyInput.value = p.dataset.val || '';
+    apply();
+  }));
+  bar?.querySelectorAll('select,input[type="search"]').forEach((el) => {
     el.addEventListener('input', apply);
     el.addEventListener('change', apply);
   });
   resetBtns.forEach((btn) => btn.addEventListener('click', () => {
-    bar?.querySelectorAll('[data-f]').forEach((el) => ((el as HTMLInputElement).value = el.tagName === 'SELECT' ? (el as HTMLSelectElement).options[0].value : ''));
+    bar?.querySelectorAll('[data-f]').forEach((el) => ((el as HTMLInputElement).value = (el as HTMLElement).tagName === 'SELECT' ? (el as HTMLSelectElement).options[0].value : ''));
     apply();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }));
@@ -168,7 +193,7 @@ const priceBrackets = [50000, 100000, 150000, 200000, 300000, 500000, 750000, 10
   // Preselect from URL (?brand= / ?body= / ?q=)
   const params = new URLSearchParams(location.search);
   if (params.get('brand') && get('brand')) (get('brand') as HTMLSelectElement).value = params.get('brand')!;
-  if (params.get('body') && get('body')) (get('body') as HTMLSelectElement).value = params.get('body')!;
+  if (params.get('body') && get('body')) (get('body') as HTMLInputElement).value = params.get('body')!;
   if (params.get('q') && get('search')) (get('search') as HTMLInputElement).value = params.get('q')!;
   apply();
 </script>

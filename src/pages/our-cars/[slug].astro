@@ -45,7 +45,7 @@ const icons: any = { Gauge, Cog, Cylinder, Zap, Fuel, Palette, DoorOpen, MapPin,
           <button data-zoom class="block w-full cursor-zoom-in" aria-label="Enlarge photo">
             <img data-main src={car.images[0]} alt={car.name} width="1400" height="1000" fetchpriority="high" decoding="async" class="aspect-[7/5] w-full object-cover" />
           </button>
-          {car.sold && <span class="absolute left-4 top-4 rounded-full bg-ink/80 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-gold ring-1 ring-gold/40 backdrop-blur">Sold</span>}
+          {car.sold && <span class="absolute left-4 top-4 rounded-full bg-[rgb(12,12,13)]/85 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-gold-lite ring-1 ring-gold/40 backdrop-blur">Sold</span>}
           <span class="pointer-events-none absolute right-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-ink/60 px-3 py-1.5 text-[0.66rem] font-medium text-ivory/85 backdrop-blur"><Expand class="h-3.5 w-3.5" /><span data-counter>1</span>/{car.images.length}</span>
           {car.images.length > 1 && (
             <>
@@ -67,7 +67,7 @@ const icons: any = { Gauge, Cog, Cylinder, Zap, Fuel, Palette, DoorOpen, MapPin,
 
       <!-- Summary / CTA -->
       <aside class="lg:sticky lg:top-[calc(var(--nav-h)+1.5rem)] lg:self-start">
-        <p class="text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-gold">{car.brand}{car.year ? ` · ${car.year}` : ''}</p>
+        <p class="text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-gold-deep">{car.brand}{car.year ? ` · ${car.year}` : ''}</p>
         <h1 class="mt-2 font-display text-[1.7rem] font-bold leading-tight text-ivory">{car.name}</h1>
 
         <div class="mt-5 flex items-end gap-4 border-y border-ivory/10 py-5">

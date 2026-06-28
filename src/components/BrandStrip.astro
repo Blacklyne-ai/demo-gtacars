@@ -8,16 +8,16 @@ const present = new Set(activeBrands(live));
 const marques = order.filter((b) => present.has(b));
 const row = [...marques, ...marques]; // duplicate for seamless marquee
 ---
-<section class="relative overflow-hidden border-y border-ivory/10 bg-ink py-7">
+<section class="relative overflow-hidden border-y border-ivory/10 bg-coal py-7">
   <div class="lux-wide mb-5 flex items-center justify-center">
-    <p class="text-[0.66rem] font-semibold uppercase tracking-[0.3em] text-faint">Marques in the showroom</p>
+    <p class="text-[0.66rem] font-semibold uppercase tracking-[0.3em] text-mist">Marques in the showroom</p>
   </div>
   <div class="relative">
-    <div class="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-ink to-transparent"></div>
-    <div class="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-ink to-transparent"></div>
+    <div class="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-coal to-transparent"></div>
+    <div class="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-coal to-transparent"></div>
     <div class="flex w-max animate-marquee items-center gap-x-12 motion-reduce:animate-none" aria-hidden="false">
       {row.map((b) => (
-        <a href={`/our-cars?brand=${encodeURIComponent(b)}`} class="shrink-0 font-display text-lg font-semibold tracking-tight text-ivory/50 transition-colors hover:text-gold sm:text-xl">{b}</a>
+        <a href={`/our-cars?brand=${encodeURIComponent(b)}`} class="shrink-0 font-display text-lg font-semibold tracking-tight text-mist transition-colors hover:text-gold-deep sm:text-xl">{b}</a>
       ))}
     </div>
   </div>

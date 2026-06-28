@@ -1,22 +1,27 @@
 ---
 import { Phone, MessageCircle } from '@lucide/astro';
 import { sellSpecialists } from '../data/site';
+
+interface Props { cols?: 1 | 2 | 3 }
+const { cols = 2 } = Astro.props;
+const colClass = cols === 1 ? '' : cols === 3 ? 'md:grid-cols-2 xl:grid-cols-3' : 'md:grid-cols-2';
 ---
-<!-- ★ Mobile rule: one specialist per row (grid-cols-1) → 2 → 3/5 -->
-<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+<!-- Robust horizontal rows: avatar · name/phone · Call + WhatsApp. Never overflows
+     because the action buttons are fixed-size icon buttons and the name/phone block
+     is allowed to shrink (min-w-0). One per row on mobile. -->
+<div class:list={['grid grid-cols-1 gap-3', colClass]}>
   {sellSpecialists.map((s, i) => (
-    <div class="card flex flex-col items-start gap-4 p-5" data-reveal data-delay={i * 60}>
-      <div class="flex items-center gap-3">
-        <span class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-steel font-display text-lg font-bold text-gold ring-1 ring-gold/25">{s.name[0]}</span>
-        <div>
-          <p class="font-display text-base font-semibold text-ivory">{s.name}</p>
-          <p class="text-[0.74rem] text-mist">Purchasing team</p>
-        </div>
+    <div class="card flex items-center gap-4 p-4" data-reveal data-delay={i * 50}>
+      <span class="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-steel font-display text-lg font-bold text-gold-deep ring-1 ring-gold/25">{s.name[0]}</span>
+      <div class="min-w-0 flex-1">
+        <p class="truncate font-display text-base font-semibold text-ivory">{s.name}</p>
+        <a href={s.tel} class="price-aed block truncate text-sm text-mist transition-colors hover:text-gold-deep">{s.phone}</a>
       </div>
-      <p class="price-aed text-sm text-mist">{s.phone}</p>
-      <div class="mt-auto grid w-full grid-cols-2 gap-2">
-        <a href={s.tel} class="btn-dark px-3 py-2.5 text-xs"><Phone class="h-3.5 w-3.5" />Call</a>
-        <a href={s.wa} target="_blank" rel="noopener" class="btn-gold px-3 py-2.5 text-xs"><MessageCircle class="h-3.5 w-3.5" />WhatsApp</a>
+      <div class="flex shrink-0 items-center gap-2">
+        <a href={s.tel} aria-label={`Call ${s.name}`} title={`Call ${s.name}`}
+          class="grid h-10 w-10 place-items-center rounded-full border border-ivory/15 text-ivory transition-colors hover:border-gold/50 hover:text-gold-deep"><Phone class="h-[18px] w-[18px]" /></a>
+        <a href={s.wa} target="_blank" rel="noopener" aria-label={`WhatsApp ${s.name}`} title={`WhatsApp ${s.name}`}
+          class="grid h-10 w-10 place-items-center rounded-full bg-[#25D366] text-white transition-transform hover:scale-105"><MessageCircle class="h-[18px] w-[18px]" /></a>
       </div>
     </div>
   ))}

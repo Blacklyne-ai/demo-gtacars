@@ -1,9 +1,13 @@
 /* ──────────────────────────────────────────────────────────────
    GTA Cars Dubai — Design System (Single Source of Truth: :root)
-   Cinematic DARK dealer luxury, derived from the logo (brass/olive-gold
-   emblem on transparent). Deep cinematic black canvas, warm ivory ink,
-   one restrained brass-gold accent (prices, CTAs, hairlines). Cars first.
+   LAYERED premium: warm-light content surfaces (showroom feel, like the
+   real gtacars.ae inventory) + DARK cinematic bands for hero / CTA / footer
+   (car imagery, light text). One restrained brass-gold accent throughout.
    Sora display (architectural) + Inter UI/specs. Self-hosted fonts.
+
+   Dark sections wrap in `.band-dark`, which locally remaps the colour vars,
+   so ANY token-based component (cards, buttons, text) themes itself correctly
+   whether it sits on a light section or a dark band — no per-context markup.
    ────────────────────────────────────────────────────────────── */
 @tailwind base;
 @tailwind components;
@@ -14,18 +18,36 @@
 @font-face { font-family: 'Sora'; font-style: normal; font-weight: 700; font-display: optional; src: url('/fonts/sora-700.woff2') format('woff2'); }
 
 :root {
-  --rgb-ink: 10 10 11;          /* #0A0A0B deepest cinematic page ground */
-  --rgb-coal: 18 18 20;         /* #121214 alternating section */
-  --rgb-graphite: 24 24 27;     /* #18181B card / panel surface */
-  --rgb-steel: 35 35 39;        /* #232327 raised / fill / border */
-  --rgb-ivory: 244 242 236;     /* #F4F2EC PRIMARY text on dark */
-  --rgb-mist: 180 175 164;      /* #B4AFA4 secondary text */
-  --rgb-faint: 140 135 124;     /* #8C877C faint label / tertiary (AA-safe on dark) */
-  --rgb-line: 244 242 236;      /* hairline base (used at low alpha) */
-  --rgb-gold: 194 174 74;       /* #C2AE4A brass accent (logo-bright) */
-  --rgb-gold-lite: 220 203 114; /* #DCCB72 highlight / shimmer */
-  --rgb-gold-deep: 171 156 52;  /* #AB9C34 logo-true core, borders/hover */
+  /* LIGHT content surfaces */
+  --rgb-ink: 247 245 240;       /* #F7F5F0 warm paper — page ground (token name kept) */
+  --rgb-coal: 240 237 230;      /* #F0EDE6 bone — alternating section */
+  --rgb-graphite: 255 255 255;  /* #FFFFFF card / panel surface */
+  --rgb-steel: 232 228 219;     /* #E8E4DB raised / fill / soft border */
+  --rgb-ivory: 26 23 18;        /* #1A1712 PRIMARY text / dark hairlines */
+  --rgb-mist: 90 86 78;         /* #5A564E secondary text */
+  --rgb-faint: 110 104 96;      /* #6E6860 faint label / tertiary (AA-safe on white) */
+  --rgb-line: 26 23 18;         /* hairline base (used at low alpha) */
+  --rgb-gold: 163 144 48;       /* #A39030 brass accent — backgrounds / large numbers / icons */
+  --rgb-gold-lite: 198 178 92;  /* #C6B25C highlight / shimmer */
+  --rgb-gold-deep: 114 100 30;  /* #72641E deep gold — small gold TEXT on light (AA-safe) */
   --nav-h: 84px;
+}
+
+/* DARK cinematic bands — remap the same tokens to a deep, warm-black scheme */
+.band-dark {
+  --rgb-ink: 12 12 13;          /* #0C0C0D */
+  --rgb-coal: 18 18 20;         /* #121214 */
+  --rgb-graphite: 26 26 30;     /* #1A1A1E card on dark */
+  --rgb-steel: 42 42 48;        /* #2A2A30 */
+  --rgb-ivory: 244 242 236;     /* #F4F2EC light text */
+  --rgb-mist: 178 173 162;      /* #B2ADA2 */
+  --rgb-faint: 150 144 133;     /* #969085 */
+  --rgb-line: 244 242 236;      /* light hairline base */
+  --rgb-gold: 198 178 92;       /* brighter brass reads better on black */
+  --rgb-gold-lite: 224 206 140;
+  --rgb-gold-deep: 168 150 60;
+  background: rgb(var(--rgb-ink));
+  color: rgb(var(--rgb-ivory));
 }
 
 @layer base {
@@ -42,20 +64,20 @@
     font-feature-settings: 'cv02','cv03','cv04','ss01';
     font-size: 1rem; line-height: 1.6;
     -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
-    overflow-x: clip; /* clip (not hidden) → no scroll container → position:sticky stays pinned */
+    overflow-x: clip;
   }
   h1, h2, h3, .font-display {
     font-family: 'Sora', Inter, system-ui, sans-serif;
     font-weight: 600; letter-spacing: -0.02em; line-height: 1.05;
   }
   h4 { font-family: 'Inter Variable', Inter, sans-serif; font-weight: 600; letter-spacing: -0.01em; }
-  ::selection { background: rgb(var(--rgb-gold) / 0.30); color: rgb(var(--rgb-ivory)); }
-  :focus-visible { outline: 1px solid rgb(var(--rgb-gold) / 0.85); outline-offset: 4px; }
+  ::selection { background: rgb(var(--rgb-gold) / 0.28); color: rgb(var(--rgb-ivory)); }
+  :focus-visible { outline: 1px solid rgb(var(--rgb-gold-deep) / 0.9); outline-offset: 3px; }
   img { content-visibility: auto; }
-  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar { width: 11px; height: 11px; }
   ::-webkit-scrollbar-track { background: rgb(var(--rgb-coal)); }
   ::-webkit-scrollbar-thumb { background: rgb(var(--rgb-steel)); border-radius: 999px; border: 3px solid rgb(var(--rgb-coal)); }
-  ::-webkit-scrollbar-thumb:hover { background: rgb(var(--rgb-gold) / 0.6); }
+  ::-webkit-scrollbar-thumb:hover { background: rgb(var(--rgb-gold) / 0.7); }
 }
 
 @layer components {
@@ -63,94 +85,90 @@
   .lux-wide { @apply mx-auto w-full max-w-7xl px-5 sm:px-10 lg:px-14; }
   .lux-narrow { @apply mx-auto w-full max-w-3xl px-5 sm:px-10; }
 
-  .eyebrow { @apply inline-block text-[0.7rem] font-semibold uppercase tracking-[0.3em] text-gold; }
+  .eyebrow { @apply inline-block text-[0.7rem] font-semibold uppercase tracking-[0.3em] text-gold-deep; }
 
-  .display-1 { @apply font-display text-[clamp(2.6rem,6.4vw,5.6rem)] font-bold leading-[1.02]; }
-  .display-2 { @apply font-display text-[clamp(2rem,4.2vw,3.4rem)] font-semibold leading-[1.06]; }
-  .display-3 { @apply font-display text-[clamp(1.5rem,2.8vw,2.3rem)] font-semibold leading-[1.12]; }
+  .display-1 { @apply font-display text-[clamp(2.6rem,6.4vw,5.4rem)] font-bold leading-[1.02]; }
+  .display-2 { @apply font-display text-[clamp(1.9rem,4vw,3.2rem)] font-semibold leading-[1.07]; }
+  .display-3 { @apply font-display text-[clamp(1.45rem,2.6vw,2.2rem)] font-semibold leading-[1.12]; }
 
   /* Buttons */
   .btn { @apply inline-flex items-center justify-center gap-2 text-[0.82rem] font-medium leading-none transition-all duration-500 ease-luxe; }
-  .btn-primary { @apply btn rounded-full border border-ivory/25 px-7 py-3.5 text-ivory hover:border-ivory hover:bg-ivory hover:text-ink; }
-  .btn-gold { @apply btn rounded-full bg-gold px-7 py-3.5 font-semibold text-ink; }
-  .btn-gold:hover { background: rgb(var(--rgb-gold-lite)); }
-  .btn-dark { @apply btn rounded-full bg-graphite px-7 py-3.5 text-ivory ring-1 ring-inset ring-ivory/15 hover:ring-gold/50; }
-  .btn-ghost { @apply btn px-2 py-1 text-mist hover:text-gold; }
+  .btn-gold { @apply btn rounded-full bg-gold px-7 py-3.5 font-semibold text-[rgb(20,17,8)] shadow-[0_8px_24px_-10px_rgb(163_144_48/0.7)]; }
+  .btn-gold:hover { background: rgb(var(--rgb-gold-deep)); color: #fff; }
+  .btn-primary { @apply btn rounded-full border border-ivory/25 px-7 py-3.5 text-ivory hover:border-ivory hover:bg-ivory hover:text-[rgb(247,245,240)]; }
+  .btn-dark { @apply btn rounded-full bg-graphite px-7 py-3.5 text-ivory shadow-soft ring-1 ring-inset ring-ivory/12 hover:ring-gold/50; }
+  .btn-ghost { @apply btn px-2 py-1 text-mist hover:text-gold-deep; }
   .btn-block { @apply w-full; }
 
-  .link-arrow { @apply inline-flex items-center gap-2 text-[0.82rem] font-medium uppercase tracking-[0.16em] text-ivory transition-colors hover:text-gold; }
+  .link-arrow { @apply inline-flex items-center gap-2 text-[0.82rem] font-medium uppercase tracking-[0.16em] text-ivory transition-colors hover:text-gold-deep; }
   .link-arrow svg { transition: transform .5s cubic-bezier(.22,1,.36,1); }
   .link-arrow:hover svg { transform: translateX(4px); }
 
   /* Surfaces */
-  .card { @apply rounded-xl border border-ivory/10 bg-graphite; }
+  .card { @apply rounded-2xl border border-ivory/10 bg-graphite shadow-soft; }
   .hairline { @apply border-ivory/10; }
   .rule { @apply h-px w-full bg-ivory/10; }
   .rule-gold { height: 1px; background: linear-gradient(90deg, rgb(var(--rgb-gold) / 0.7), transparent); }
 
-  .chip { @apply inline-flex items-center gap-1.5 rounded-full border border-ivory/12 px-3.5 py-1.5 text-[0.72rem] font-medium uppercase tracking-[0.12em] text-mist transition-colors; }
+  .chip { @apply inline-flex items-center gap-1.5 rounded-full border border-ivory/12 bg-graphite px-3.5 py-1.5 text-[0.72rem] font-medium uppercase tracking-[0.12em] text-mist transition-colors; }
 
-  /* Glass nav (dark) */
-  .glass { background: rgb(var(--rgb-ink) / 0.6); backdrop-filter: blur(18px) saturate(1.2); -webkit-backdrop-filter: blur(18px) saturate(1.2); }
+  /* Glass nav — soft warm-white glass that reads over both dark hero and light pages */
+  .glass { background: rgb(250 248 244 / 0.92); backdrop-filter: blur(18px) saturate(1.1); -webkit-backdrop-filter: blur(18px) saturate(1.1); }
+  .band-dark .glass { background: rgb(14 14 16 / 0.6); }
 
   /* Filter / category pills */
-  .cat-pill { @apply shrink-0 whitespace-nowrap rounded-full border border-ivory/12 px-4 py-2 text-[0.75rem] font-medium uppercase tracking-[0.1em] text-mist transition-all duration-300; }
+  .cat-pill { @apply shrink-0 whitespace-nowrap rounded-full border border-ivory/15 bg-graphite px-4 py-2 text-[0.75rem] font-medium uppercase tracking-[0.1em] text-mist transition-all duration-300; }
   .cat-pill:hover { @apply border-ivory/30 text-ivory; }
-  .cat-pill.is-on { @apply border-gold bg-gold text-ink; }
+  .cat-pill.is-on { @apply border-gold bg-gold text-[rgb(20,17,8)]; }
 
-  /* Scroll reveal — gated on html.js (visible without JS) */
-  .js [data-reveal], .js [data-slide] { opacity: 0; will-change: opacity, transform; }
-  .js [data-reveal] { transform: translateY(30px); }
-  .js [data-slide="left"] { transform: translateX(-48px); }
-  .js [data-slide="right"] { transform: translateX(48px); }
-  @media (prefers-reduced-motion: reduce) { .js [data-reveal], .js [data-slide] { opacity: 1 !important; transform: none !important; } }
-
-  .price-aed { font-variant-numeric: tabular-nums; letter-spacing: 0; }
-  [data-wish].is-saved { color: rgb(var(--rgb-gold)); }
-  [data-wish].is-saved svg { fill: currentColor; }
-
-  /* Parallax media */
-  .fx-img { will-change: transform; transform: scale(1.3); }
-  .parallax { will-change: transform; }
-  .parallax img, img.parallax { transform: scale(1.18); }
-
-  /* Text-on-image safety (cinematic hero overlays) */
-  .text-shadow-cine { text-shadow: 0 2px 28px rgb(0 0 0 / 0.6), 0 1px 4px rgb(0 0 0 / 0.5); }
-
-  /* Custom-styled native selects (dark, with brass chevron) */
+  /* Custom-styled native selects (brass chevron, themes per context) */
   .select-dark {
     appearance: none; -webkit-appearance: none; -moz-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23C2AE4A' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%237A6B20' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
     background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem;
   }
-  .select-dark option { background: rgb(var(--rgb-graphite)); color: rgb(var(--rgb-ivory)); }
+  .band-dark .select-dark { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23C6B25C' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); }
 
-  /* Section vertical rhythm */
+  /* Section rhythm */
   .section { @apply py-20 sm:py-28; }
   .section-sm { @apply py-16 sm:py-20; }
 
-  /* Brass gradient text — used very sparingly on a single accent word */
   .text-brass {
-    background: linear-gradient(100deg, rgb(var(--rgb-gold-lite)), rgb(var(--rgb-gold)) 45%, rgb(var(--rgb-gold-deep)));
+    background: linear-gradient(100deg, rgb(var(--rgb-gold-deep)), rgb(var(--rgb-gold)) 55%, rgb(var(--rgb-gold-lite)));
     -webkit-background-clip: text; background-clip: text; color: transparent;
   }
 
-  /* Cinematic film-grain (very faint, premium texture) */
+  /* Cinematic film-grain on dark image bands */
   .grain::after {
     content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 1; opacity: 0.05; mix-blend-mode: overlay;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
-  /* Scroll cue */
   .scroll-cue span { animation: scrollcue 1.9s ease-in-out infinite; }
   @media (prefers-reduced-motion: reduce) { .scroll-cue span { animation: none; } }
 
+  /* Scroll reveal — gated on html.js */
+  .js [data-reveal], .js [data-slide] { opacity: 0; will-change: opacity, transform; }
+  .js [data-reveal] { transform: translateY(28px); }
+  .js [data-slide="left"] { transform: translateX(-44px); }
+  .js [data-slide="right"] { transform: translateX(44px); }
+  @media (prefers-reduced-motion: reduce) { .js [data-reveal], .js [data-slide] { opacity: 1 !important; transform: none !important; } }
+
+  .price-aed { font-variant-numeric: tabular-nums; letter-spacing: 0; }
+  [data-wish].is-saved { color: rgb(var(--rgb-gold-deep)); }
+  [data-wish].is-saved svg { fill: currentColor; }
+
+  .fx-img { will-change: transform; transform: scale(1.3); }
+  .parallax { will-change: transform; }
+  .parallax img, img.parallax { transform: scale(1.18); }
+
+  .text-shadow-cine { text-shadow: 0 2px 28px rgb(0 0 0 / 0.55), 0 1px 4px rgb(0 0 0 / 0.5); }
+
   /* Lightbox */
-  .lightbox { @apply fixed inset-0 z-[120] hidden place-items-center bg-ink/95 backdrop-blur-sm p-4 sm:p-8; }
+  .lightbox { @apply fixed inset-0 z-[120] hidden place-items-center bg-[rgb(8_8_9/0.96)] backdrop-blur-sm p-4 sm:p-8; }
   .lightbox.is-open { display: grid; }
   .lightbox img { max-height: 88vh; max-width: 100%; width: auto; border-radius: 0.75rem; }
 
-  /* Hide scrollbar on horizontal media strips */
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   .no-scrollbar::-webkit-scrollbar { display: none; }
 }

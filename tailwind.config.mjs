@@ -40,9 +40,11 @@ export default {
       borderRadius: { pill: '999px', xl: '0.75rem', '2xl': '1rem', '3xl': '1.5rem' },
       maxWidth: { '7xl': '80rem', '8xl': '90rem' },
       boxShadow: {
-        soft: '0 1px 2px rgb(0 0 0 / 0.4), 0 18px 50px -28px rgb(0 0 0 / 0.8)',
-        lift: '0 2px 8px rgb(0 0 0 / 0.5), 0 50px 110px -50px rgb(0 0 0 / 0.95)',
-        'glow-gold': '0 0 0 1px rgb(var(--rgb-gold) / 0.45), 0 20px 60px -20px rgb(var(--rgb-gold) / 0.28)',
+        // tuned for light surfaces (subtle warm-grey shadows); on .band-dark cards
+        // the deep background swallows them so they read fine there too.
+        soft: '0 1px 2px rgb(40 36 28 / 0.04), 0 10px 30px -16px rgb(40 36 28 / 0.16)',
+        lift: '0 2px 6px rgb(40 36 28 / 0.06), 0 30px 70px -34px rgb(40 36 28 / 0.28)',
+        'glow-gold': '0 0 0 1px rgb(var(--rgb-gold) / 0.35), 0 18px 50px -22px rgb(var(--rgb-gold) / 0.30)',
       },
       transitionTimingFunction: { luxe: 'cubic-bezier(0.22, 1, 0.36, 1)' },
       keyframes: {

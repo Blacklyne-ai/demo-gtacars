@@ -1,0 +1,40 @@
+---
+// Dark cinematic image band with the real published figures from gtacars.ae.
+// Provides tonal relief between the light content sections + real imagery.
+import { ArrowRight } from '@lucide/astro';
+const img = '/images/cars/2026-land-rover-defender-110-p525-v8-5-years-lr-warranty-service-pack-fully-loaded-gcc/00.webp';
+const stats = [
+  { k: '5', v: 'Showrooms' },
+  { k: '50+', v: 'Car Makes' },
+  { k: '800+', v: 'Cars in stock' },
+  { k: '10,000+', v: 'Happy clients' },
+];
+---
+<section class="band-dark grain relative isolate overflow-hidden">
+  <div class="absolute inset-0 -z-10">
+    <img src={img} alt="" aria-hidden="true" width="1400" height="800" loading="lazy" decoding="async"
+      class="h-full w-full object-cover object-[60%_center] [filter:brightness(0.4)_saturate(0.85)]" />
+    <div class="absolute inset-0 bg-gradient-to-r from-ink via-ink/80 to-ink/40"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-ink/90 via-transparent to-ink/70"></div>
+  </div>
+
+  <div class="lux-wide py-20 sm:py-24">
+    <div class="max-w-xl">
+      <p class="eyebrow mb-4" data-reveal>One of the UAE’s fastest-growing showrooms</p>
+      <h2 class="display-2 text-ivory" data-reveal>Trusted by thousands across the Emirates.</h2>
+    </div>
+
+    <div class="mt-12 grid grid-cols-2 gap-8 sm:gap-10 lg:grid-cols-4">
+      {stats.map((s, i) => (
+        <div data-reveal data-delay={i * 70}>
+          <p class="price-aed font-display text-[clamp(2.2rem,4vw,3.4rem)] font-bold leading-none text-gold">{s.k}</p>
+          <p class="mt-2 text-[0.78rem] uppercase tracking-[0.16em] text-mist">{s.v}</p>
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-12" data-reveal>
+      <a href="/about" class="link-arrow">More about GTA Cars <ArrowRight class="h-4 w-4" /></a>
+    </div>
+  </div>
+</section>
